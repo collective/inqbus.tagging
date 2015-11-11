@@ -38,5 +38,6 @@
       />
 
   <!-- -*- extra stuff goes here -*- -->
+  <include package=".subscriber" />
 
 </configure>
