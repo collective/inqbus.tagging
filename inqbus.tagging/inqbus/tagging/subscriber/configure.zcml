@@ -18,4 +18,10 @@
     handler=".exif_based.exif_to_orientation"
     />
 
+    <subscriber
+    for="plone.app.contenttypes.content.Image
+         zope.lifecycleevent.IObjectCreatedEvent"
+    handler=".title_based.title_to_tag"
+    />
+
 </configure>
