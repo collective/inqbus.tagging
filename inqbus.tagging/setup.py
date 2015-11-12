@@ -30,7 +30,9 @@ setup(name='inqbus.tagging',
           'plone.namedfile [blobs]',
           # -*- Extra requirements: -*-
           'Products.PloneKeywordManager',
-          'IPTCInfo'
+          'IPTCInfo',
+          'exifread',
+          'Pillow'
       ],
       entry_points="""
       # -*- Entry points: -*-
