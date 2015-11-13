@@ -39,5 +39,6 @@
 
   <!-- -*- extra stuff goes here -*- -->
   <include package=".subscriber" />
+  <include package=".browser" />
 
 </configure>
