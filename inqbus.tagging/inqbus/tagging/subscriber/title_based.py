@@ -23,7 +23,5 @@ def title_to_tag(context, event):
         else:
             continue
 
-    print clear_tags
-
     context.setSubject(clear_tags)
     context.reindexObject()

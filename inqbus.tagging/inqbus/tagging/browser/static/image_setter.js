@@ -1,8 +1,9 @@
 
 (function($) {
 
-    function add_image(){
+    function add_images(){
 
+    try {
         var table = document.getElementsByTagName("table")[0];
 
         for (var i = 0, row; row = table.rows[i]; i++) {
@@ -17,6 +18,8 @@
                }
            }
         }
+    }
+    catch(err){}
     };
 
     function get_image_html(UID, col){
@@ -27,6 +30,19 @@
         }, "json");
     }
 
-window.onload=add_image;
+    window.onload=add_images;
+
+    MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+    var observer = new MutationObserver(function(mutations, observer) {
+        add_images()
+    });
+
+    // define what element should be observed by the observer
+    // and what types of mutations trigger the callback
+    observer.observe(document, {
+      subtree: true,
+      attributes: true
+});
 
 }(jQuery));
