@@ -75,8 +75,10 @@ class OwnFolderContentsView(FolderContentsView):
         image_uid = self.request.get('uid')
 
         image = api.content.get(UID=image_uid)
-
-        html = '<img src=%s />' % (
-            image.absolute_url()+"/@@images/image/mini")
+        if image:
+            html = '<img src=%s />' % (
+                image.absolute_url()+"/@@images/image/mini")
+        else:
+            html = ''
 
         return self.json_response({'html': html})

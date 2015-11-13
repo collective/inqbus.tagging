@@ -19,7 +19,9 @@
            }
         }
     }
-    catch(err){}
+    catch(err){
+        // for the case table does not exist
+    }
     };
 
     function get_image_html(UID, col){
