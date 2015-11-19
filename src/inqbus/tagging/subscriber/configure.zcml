@@ -21,6 +21,11 @@
     <subscriber
     for="plone.app.contenttypes.content.Image
          zope.lifecycleevent.IObjectCreatedEvent"
+    handler=".title_based.image_title_to_tag"
+    />
+
+    <subscriber
+    for="zope.lifecycleevent.IObjectCreatedEvent"
     handler=".title_based.title_to_tag"
     />
 

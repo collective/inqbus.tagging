@@ -1,5 +1,6 @@
+from inqbus.tagging.functions import add_tags
 
-def title_to_tag(context, event):
+def image_title_to_tag(context, event):
     image = context.image
 
     filename = image.filename
@@ -9,19 +10,16 @@ def title_to_tag(context, event):
 
     name_tags.pop(-1)
 
-    tags = list(context.Subject()) + name_tags
+    add_tags(context, tags_to_add=name_tags)
 
-    tags = list(set(tags))
 
-    clear_tags = []
+def title_to_tag(event):
 
-    for tag in tags:
-        try:
-            int(tag)
-        except ValueError:
-            clear_tags.append(tag)
-        else:
-            continue
+    context = event.object
 
-    context.setSubject(clear_tags)
-    context.reindexObject()
+    title = context.title
+    title = title.replace(' ', '.').replace('_', '.').replace('/', '.')
+
+    name_tags = title.split('.')
+
+    add_tags(context, tags_to_add=name_tags)

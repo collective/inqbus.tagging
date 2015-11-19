@@ -1,9 +1,9 @@
 from iptcinfo import IPTCInfo
 from StringIO import StringIO
-from Products.CMFPlone.utils import safe_unicode
 
 from inqbus.tagging.config import ORIENTATIONS, HORIZONTAL_MIRROR, \
     VERTICAL_MIRROR
+from inqbus.tagging.functions import add_tags
 
 import exifread
 import PIL
@@ -35,27 +35,7 @@ def exif_to_tag(context, event):
     for field in exif_tags:
         tags.append(str(exif_tags[field]))
 
-    tags = list(set(tags))
-
-    clear_tags = []
-
-    for tag in tags:
-        try:
-            int(tag)
-        except ValueError:
-            pass
-        else:
-            continue
-        try:
-            clear_tag = safe_unicode(tag)
-        except UnicodeDecodeError:
-            continue
-
-        if len(clear_tag) < 100:
-            clear_tags.append(clear_tag)
-
-    context.setSubject(clear_tags)
-    context.reindexObject()
+    add_tags(context, tags_to_add=tags)
 
     io.close()
 
