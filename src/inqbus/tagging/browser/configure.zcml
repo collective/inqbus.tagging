@@ -24,9 +24,17 @@
         permission="zope2.View"
     />
 
+    <browser:page
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      name="keyword_manager_view"
+      template="templates/keyword_manager_view.pt"
+      class=".views.KeywordManagerView"
+      permission="plone_keyword_manager.UsePloneKeywordManager"
+      layer="inqbus.tagging.interfaces.ILayer"
+      />
 
     <browser:resource
       name="image_setter.js"
-      file="static/image_setter.js" />
+      file="static/js/image_setter.js" />
 
 </configure>

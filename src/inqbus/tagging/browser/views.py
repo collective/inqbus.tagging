@@ -4,9 +4,14 @@ from plone.app.content.browser.file import TUS_ENABLED
 from plone.app.content.utils import json_dumps
 from plone.uuid.interfaces import IUUID
 from Products.CMFPlone import PloneMessageFactory as _
+from Products.PloneKeywordManager.browser.prefs_keywords_view import PrefsKeywordsView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component.hooks import getSite
 from zope.i18n import translate
+from Products.CMFCore.utils import getToolByName
 import json
+
+from inqbus.tagging import logger
 
 
 class OwnFolderContentsView(FolderContentsView):
@@ -82,3 +87,30 @@ class OwnFolderContentsView(FolderContentsView):
             html = ''
 
         return self.json_response({'html': html})
+
+
+class KeywordManagerView(PrefsKeywordsView):
+
+    template = ViewPageTemplateFile('templates/keyword_manager_view.pt')
+
+    def doReturn(self, message='', msg_type='', field=''):
+        """
+        set the message and return
+        """
+        if message and msg_type:
+            pu = getToolByName(self.context, "plone_utils")
+            pu.addPortalMessage(message, type=msg_type)
+
+        logger.info(self.context.translate(message))
+        portal_url = self.context.portal_url()
+        url = "%s/keyword_manager_view" % portal_url
+
+        field = self.request.get('field', '')
+        limit = self.request.get('limit', '')
+        search = self.request.get('search', '')
+
+        if field or limit or search:
+            url = "%s?field=%s&search=%s&limit=%s" % (url, field, search,
+                                                      limit)
+
+        self.request.RESPONSE.redirect(url)
