@@ -1,3 +1,5 @@
+import json
+
 from plone.app.content.browser.contents import FolderContentsView
 from plone import api
 from plone.app.content.browser.file import TUS_ENABLED
@@ -9,9 +11,12 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component.hooks import getSite
 from zope.i18n import translate
 from Products.CMFCore.utils import getToolByName
-import json
-
+from plone.app.registry.browser.controlpanel import RegistryEditForm, \
+    ControlPanelFormWrapper
+from plone.z3cform import layout
+from Products.Five.browser import BrowserView
 from inqbus.tagging import logger
+from inqbus.tagging.interfaces import ITagSettings
 
 
 class OwnFolderContentsView(FolderContentsView):
@@ -114,3 +119,24 @@ class KeywordManagerView(PrefsKeywordsView):
                                                       limit)
 
         self.request.RESPONSE.redirect(url)
+
+
+class TagSettingsEditForm(RegistryEditForm):
+    """
+    Define form logic
+    """
+    schema = ITagSettings
+    label = u"Inqbus Tagging Settings"
+
+
+class TagSettingsView(BrowserView):
+    """
+    View which wrap the settings form using ControlPanelFormWrapper to a
+    HTML boilerplate frame.
+    """
+
+    def __call__(self, *args, **kwargs):
+        view_factor = layout.wrap_form(TagSettingsEditForm,
+                                       ControlPanelFormWrapper)
+        view = view_factor(self.context, self.request)
+        return view()

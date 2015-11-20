@@ -33,6 +33,13 @@
       layer="inqbus.tagging.interfaces.ILayer"
       />
 
+    <browser:page
+        name="inqbus-tagging-settings"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        class=".views.TagSettingsView"
+        permission="cmf.ManagePortal"
+        />
+
     <browser:resource
       name="image_setter.js"
       file="static/js/image_setter.js" />

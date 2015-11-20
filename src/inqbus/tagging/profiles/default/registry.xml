@@ -1,0 +1,18 @@
+<registry>
+
+    <records interface="inqbus.tagging.interfaces.ITagSettings"
+                 prefix="inqbus.tagging.interfaces.ITagSettings">
+        <value key="ignored_tags">the
+der
+die
+das
+jpg
+png
+pdf
+gif
+jpeg</value>
+        <value key="ignored_exif"></value>
+        <value key="ignored_iptc"></value>
+    </records>
+
+</registry>

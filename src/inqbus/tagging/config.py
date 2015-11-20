@@ -5,6 +5,9 @@ PROJECT_NAME = 'inqbus.tagging'
 INSTALL_PROFILE = '{0}:default'.format(PROJECT_NAME)
 UNINSTALL_PROFILE = '{0}:uninstall'.format(PROJECT_NAME)
 
+IGNORED_TAGS_SETTINGS_KEY = 'inqbus.tagging.interfaces.ITagSettings.ignored_tags'
+IGNORED_EXIF_SETTINGS_KEY = 'inqbus.tagging.interfaces.ITagSettings.ignored_exif'
+IGNORED_IPTC_SETTINGS_KEY = 'inqbus.tagging.interfaces.ITagSettings.ignored_iptc'
 # configuration for image rotation
 
 NO_MIRROR = 0
