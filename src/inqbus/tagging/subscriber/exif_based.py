@@ -4,7 +4,7 @@ from iptcinfo import IPTCInfo
 from plone.registry.interfaces import IRegistry
 from zope.component import getUtility
 from inqbus.tagging.config import ORIENTATIONS, HORIZONTAL_MIRROR, \
-    VERTICAL_MIRROR, IGNORED_EXIF_SETTINGS_KEY, IGNORED_IPTC_SETTINGS_KEY
+    VERTICAL_MIRROR, USED_EXIF_SETTINGS_KEY, USED_IPTC_SETTINGS_KEY
 from inqbus.tagging.functions import add_tags
 import exifread
 import PIL
@@ -28,22 +28,27 @@ def exif_to_tag(context, event):
 
     registry = getUtility(IRegistry)
 
-    ignored_iptc = registry[IGNORED_IPTC_SETTINGS_KEY]
-    ignored_exif = registry[IGNORED_EXIF_SETTINGS_KEY]
+    used_iptc = registry[USED_IPTC_SETTINGS_KEY]
+    used_exif = registry[USED_EXIF_SETTINGS_KEY]
 
-    for field in info_iptc.data:
-        if field in ignored_iptc:
-            continue
-        field_tags = info_iptc.data[field]
-        if isinstance(field_tags, list):
-            tags = tags + field_tags
-        else:
-            tags.append(str(field_tags))
+    print info_iptc.data
 
-    for field in exif_tags:
-        if field in ignored_exif:
-            continue
-        tags.append(str(exif_tags[field]))
+    if used_iptc:
+        iptc_fields = used_iptc.replace(' ', '').split('/n')
+        for field in info_iptc.data:
+            if str(field) not in iptc_fields:
+                continue
+            field_tags = info_iptc.data[field]
+            if isinstance(field_tags, list):
+                tags = tags + field_tags
+            else:
+                tags.append(str(field_tags))
+
+    if used_exif:
+        for field in exif_tags:
+            if field not in used_exif:
+                continue
+            tags.append(str(exif_tags[field]))
 
     add_tags(context, tags_to_add=tags)
 

@@ -14,23 +14,26 @@ class ITagSettings(model.Schema):
     ignored_tags = schema.Text(title=_(u"Ignored Tags"),
                                description=_(u"Define Tags which should be " +
                                     u"ignored by Auto-Tag-Generation.\n" +
-                                    u"Enter one tag per line.")
+                                    u"Enter one tag per line."),
+                               required=False,
     )
 
-    ignored_exif = schema.Text(title=_(u"Ignored Exif Fields"),
-                               description=_(u"Define Fields which should be " +
-                                    u"ignored by Auto-Tag-Generation.\n" +
+    used_exif = schema.Text(title=_(u"Used Exif Fields"),
+                            description=_(u"Define Fields which should be " +
+                                    u"used by Auto-Tag-Generation.\n" +
                                     u"Enter one field per line.\n" +
                                     u"Read more about the fields on " +
                                     u"exifread-Documentation."
-                                )
-    )
+                                ),
+                            required=False,
+                            )
 
-    ignored_iptc = schema.Text(title=_(u"Ignored IPTC Fields"),
-                               description=_(u"Define Fields which should be " +
-                                    u"ignored by Auto-Tag-Generation.\n" +
+    used_iptc = schema.Text(title=_(u"Used IPTC Fields"),
+                            description=_(u"Define Fields which should be " +
+                                    u"used by Auto-Tag-Generation.\n" +
                                     u"Enter one field per line.\n" +
                                     u"Read more about the fields on " +
                                     u"IPTCInfo-Documentation."
-                                )
-    )
+                                ),
+                            required=False,
+                            )

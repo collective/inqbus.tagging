@@ -7,6 +7,9 @@ from inqbus.tagging.config import IGNORED_TAGS_SETTINGS_KEY
 
 def add_tags(obj, tags_to_add=[]):
 
+    if not hasattr(obj, 'Subject'):
+        return
+
     tags = list(obj.Subject()) + tags_to_add
     tags = list(set(tags))
 
@@ -36,7 +39,10 @@ def add_tags(obj, tags_to_add=[]):
 def check_ignored_tags(tag):
     registry = getUtility(IRegistry)
 
-    ignored_tags = registry[IGNORED_TAGS_SETTINGS_KEY]
+    if IGNORED_TAGS_SETTINGS_KEY in registry:
+        ignored_tags = registry[IGNORED_TAGS_SETTINGS_KEY]
+    else:
+        ignored_tags = []
 
     if tag in ignored_tags:
         return True
