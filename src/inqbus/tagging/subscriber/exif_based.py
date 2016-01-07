@@ -1,58 +1,48 @@
+
+import exifread
 from StringIO import StringIO
 
-from iptcinfo import IPTCInfo
 from plone.registry.interfaces import IRegistry
 from zope.component import getUtility
 from inqbus.tagging.config import ORIENTATIONS, HORIZONTAL_MIRROR, \
     VERTICAL_MIRROR, USED_EXIF_SETTINGS_KEY, USED_IPTC_SETTINGS_KEY
 from inqbus.tagging.functions import add_tags
-import exifread
+
 import PIL
+from inqbus.tagging.subscriber.functions import image_to_meta
 
 
 def exif_to_tag(context, event):
-    image = context.image
 
-    data = image.data
-
-    io = StringIO(data)
-    io.seek(0)
-
-    info_iptc = IPTCInfo(io, force=True)
-
-    io.seek(0)
-
-    exif_tags = exifread.process_file(io)
-
-    tags = list(context.Subject())
+    meta = image_to_meta ( context)
 
     registry = getUtility(IRegistry)
 
-    used_iptc = registry[USED_IPTC_SETTINGS_KEY]
-    used_exif = registry[USED_EXIF_SETTINGS_KEY]
+    allowed_iptc = registry[USED_IPTC_SETTINGS_KEY]
+    allowed_exif = registry[USED_EXIF_SETTINGS_KEY]
 
-    print info_iptc.data
+    iptc = meta['iptc']
+    exif = meta['exif']
 
-    if used_iptc:
-        iptc_fields = used_iptc.replace(' ', '').split('/n')
-        for field in info_iptc.data:
-            if str(field) not in iptc_fields:
-                continue
-            field_tags = info_iptc.data[field]
-            if isinstance(field_tags, list):
-                tags = tags + field_tags
-            else:
-                tags.append(str(field_tags))
+    tags = list(context.Subject())
 
-    if used_exif:
-        for field in exif_tags:
-            if field not in used_exif:
-                continue
-            tags.append(str(exif_tags[field]))
+    if allowed_iptc and iptc:
+        iptc_fields = allowed_iptc.replace(' ', '').split('/n')
+        for field in iptc_fields:
+            if str(field) in iptc.data:
+                field_tags = iptc.data[field]
+                if isinstance(field_tags, list):
+                    tags = tags + field_tags
+                else:
+                    tags.append(str(field_tags))
+
+    if allowed_exif and exif:
+        for field in allowed_exif.split('\r\n'):
+            if field in exif:
+                tags.append(str(exif[field]))
 
     add_tags(context, tags_to_add=tags)
 
-    io.close()
 
 
 def exif_to_orientation(context, event):

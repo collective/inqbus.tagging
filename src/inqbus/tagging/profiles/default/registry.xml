@@ -11,9 +11,12 @@ png
 pdf
 gif
 jpeg</value>
+
         <value key="used_exif"></value>
+
         <value key="used_iptc">25
 101</value>
+
     </records>
 
 </registry>
