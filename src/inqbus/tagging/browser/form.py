@@ -18,8 +18,6 @@ class ITableRowSchema(model.Schema):
 class IFormSchema(model.Schema):
     four = schema.TextLine(title=u"Four")
 
-    # directives.widget('functies', DataGridField)
-    # directives.widget('functies', DataGridFieldFactory)
     functies = schema.List(
             title=u"Functies",
             default=[],
@@ -40,8 +38,8 @@ class MyForm(AutoExtensibleForm, form.Form):
     schema = IFormSchema
     ignoreContext = True
 
-    # fields = field.Fields(IFormSchema)
-    # fields['functies'].widgetFactory = DataGridFieldFactory
+    fields = field.Fields(IFormSchema)
+    fields['functies'].widgetFactory = DataGridFieldFactory
 
     label = u"What's your name?"
     description = u"Simple, sample form"
