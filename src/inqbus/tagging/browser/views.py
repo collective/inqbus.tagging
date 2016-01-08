@@ -155,7 +155,7 @@ class TagSettingsEditForm(AutoExtensibleForm, form.EditForm):
         if registry[TEST_IMAGE_SETTINGS_KEY]:
             obj_uid = registry[TEST_IMAGE_SETTINGS_KEY]
             obj = api.content.get(UID=obj_uid)
-            if obj.portal_type and obj.portal_type == 'Image':
+            if obj and obj.portal_type and obj.portal_type == 'Image':
                 exif = image_to_meta(obj)['exif']
                 exif_keys = exif.keys()
                 exif_keys.sort()
@@ -174,7 +174,8 @@ class TagSettingsEditForm(AutoExtensibleForm, form.EditForm):
 
     def applyChanges(self, data):
         registry = getUtility(IRegistry)
-        registry[TEST_IMAGE_SETTINGS_KEY] = unicode(data['test_image'].UID())
+        if 'test_image' in data and data['test_image']:
+            registry[TEST_IMAGE_SETTINGS_KEY] = unicode(data['test_image'].UID())
         pass
 
 

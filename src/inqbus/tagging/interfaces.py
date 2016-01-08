@@ -49,6 +49,6 @@ class ITagSettingsView(ITagSettings):
     test_image = RelationChoice(title=_(u"Select EXIF-Tags from Image"),
                                description=_(u"Here you can select an image to pick EXIF tags for the whitelists"),
                                vocabulary="plone.app.vocabularies.Catalog",
-                               required=True,
+                               required=False,
                                )
 
