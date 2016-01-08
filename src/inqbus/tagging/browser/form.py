@@ -19,6 +19,7 @@ class IFormSchema(model.Schema):
     four = schema.TextLine(title=u"Four")
 
     # directives.widget('functies', DataGridField)
+    # directives.widget('functies', DataGridFieldFactory)
     functies = schema.List(
             title=u"Functies",
             default=[],
