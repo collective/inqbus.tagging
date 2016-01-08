@@ -33,7 +33,8 @@ setup(name='inqbus.tagging',
           'Products.PloneKeywordManager',
           'IPTCInfo',
           'exifread',
-          'Pillow'
+          'Pillow',
+          'plone.autoform'
       ],
       entry_points="""
       # -*- Entry points: -*-

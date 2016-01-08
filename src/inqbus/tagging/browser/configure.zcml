@@ -55,4 +55,11 @@
       name="image_setter.js"
       file="static/js/image_setter.js" />
 
+    <browser:page
+          for="Products.CMFCore.interfaces.ISiteRoot"
+          name="my-form"
+          permission="zope2.View"
+          class=".form.MyForm"
+          />
+
 </configure>
