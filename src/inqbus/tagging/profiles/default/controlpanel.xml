@@ -30,4 +30,30 @@
             <permission>Manage portal</permission>
     </configlet>
 
+    <configlet
+        title="Inqbus Tagging - IPTC Tag Import"
+        action_id="inqbus.tagging.iptc.import"
+        appId="inqbus.tagging"
+        category="Products"
+        condition_expr=""
+        url_expr="string:${portal_url}/@@inqbus-tagging-iptc-import"
+        icon_expr=""
+        visible="True"
+        i18n:attributes="title">
+            <permission>Manage portal</permission>
+    </configlet>
+
+    <configlet
+        title="Inqbus Tagging - EXIF Tag Import"
+        action_id="inqbus.tagging.exif.import"
+        appId="inqbus.tagging"
+        category="Products"
+        condition_expr=""
+        url_expr="string:${portal_url}/@@inqbus-tagging-exif-import"
+        icon_expr=""
+        visible="True"
+        i18n:attributes="title">
+            <permission>Manage portal</permission>
+    </configlet>
+
 </object>

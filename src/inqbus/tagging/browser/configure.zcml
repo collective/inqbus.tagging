@@ -47,19 +47,26 @@
     <browser:page
         name="inqbus-tagging-settings"
         for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-        class=".views.TagSettingsView"
+        class=".form.TagSettingsView"
+        permission="cmf.ManagePortal"
+        />
+
+    <browser:page
+        name="inqbus-tagging-iptc-import"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        class=".form.TagImportIptcView"
+        permission="cmf.ManagePortal"
+        />
+
+    <browser:page
+        name="inqbus-tagging-exif-import"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        class=".form.TagImportExifView"
         permission="cmf.ManagePortal"
         />
 
     <browser:resource
       name="image_setter.js"
       file="static/js/image_setter.js" />
-
-    <browser:page
-          for="Products.CMFCore.interfaces.ISiteRoot"
-          name="my-form"
-          permission="zope2.View"
-          class=".form.MyForm"
-          />
 
 </configure>

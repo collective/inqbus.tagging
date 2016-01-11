@@ -1,31 +1,18 @@
 import json
+
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone import PloneMessageFactory as _
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.PloneKeywordManager.browser.prefs_keywords_view import PrefsKeywordsView
 from plone import api
 from plone.app.content.browser.contents import FolderContentsView
 from plone.app.content.browser.file import TUS_ENABLED
 from plone.app.content.utils import json_dumps
-from plone.app.registry.browser.controlpanel import RegistryEditForm, \
-    ControlPanelFormWrapper
-from plone.autoform.form import AutoExtensibleForm
-from plone.namedfile.interfaces import IImage
-
-from plone.registry.interfaces import IRegistry
 from plone.uuid.interfaces import IUUID
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone import PloneMessageFactory as _
-from Products.Five.browser import BrowserView
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from Products.PloneKeywordManager.browser.prefs_keywords_view import PrefsKeywordsView
-from zope import schema
-from zope.component import getUtility
 from zope.component.hooks import getSite
 from zope.i18n import translate
-from plone.z3cform import layout
-from z3c.form import form, field
 
 from inqbus.tagging import logger
-from inqbus.tagging.config import TEST_IMAGE_SETTINGS_KEY
-from inqbus.tagging.interfaces import ITagSettingsView
-from inqbus.tagging.subscriber.functions import image_to_meta
 
 
 class OwnFolderContentsView(FolderContentsView):
@@ -128,65 +115,3 @@ class KeywordManagerView(PrefsKeywordsView):
                                                       limit)
 
         self.request.RESPONSE.redirect(url)
-
-
-# class TagSettingsEditForm(RegistryEditForm):
-#     """
-#     Define form logic
-#     """
-#     schema = ITagSettings
-#     label = u"Inqbus Tagging Settings"
-
-class TagSettingsEditForm(AutoExtensibleForm, form.EditForm):
-    """
-    Define form logic
-    """
-    ignoreContext = True
-    schema = ITagSettingsView
-    label = u"Inqbus Tagging Settings"
-
-
-    def __init__(self, context, request):
-        super(TagSettingsEditForm, self).__init__(context, request)
-
-    def updateFields(self):
-        super(TagSettingsEditForm, self).updateFields()
-        registry = getUtility(IRegistry)
-        if registry[TEST_IMAGE_SETTINGS_KEY]:
-            obj_uid = registry[TEST_IMAGE_SETTINGS_KEY]
-            obj = api.content.get(UID=obj_uid)
-            if obj and obj.portal_type and obj.portal_type == 'Image':
-                exif = image_to_meta(obj)['exif']
-                exif_keys = exif.keys()
-                exif_keys.sort()
-                for exif_key in exif_keys:
-                    if exif_key :
-                        exif_field = exif[exif_key]
-                        if str(exif_field) and len(str(exif_field)) < 100 :
-                            try:
-                                self.fields += field.Fields(schema.Bool(
-                                                        __name__ = exif_key,
-                                                        title= _(exif_key + " : " +str(exif_field)),
-                                                        required=False,
-                                                        default=False))
-                            except:
-                                pass
-
-    def applyChanges(self, data):
-        registry = getUtility(IRegistry)
-        if 'test_image' in data and data['test_image']:
-            registry[TEST_IMAGE_SETTINGS_KEY] = unicode(data['test_image'].UID())
-        pass
-
-
-class TagSettingsView(BrowserView):
-    """
-    View which wrap the settings form using ControlPanelFormWrapper to a
-    HTML boilerplate frame.
-    """
-
-    def __call__(self, *args, **kwargs):
-        view_factor = layout.wrap_form(TagSettingsEditForm,
-                                       ControlPanelFormWrapper)
-        view = view_factor(self.context, self.request)
-        return view()
