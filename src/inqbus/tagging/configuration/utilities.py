@@ -22,40 +22,14 @@ class ITaggingConfig(Interface):
 class TaggingConfig(Persistent):
     implements(ITaggingConfig)
 
-    _use_exif = True
-    _use_iptc = True
-    _use_title = True
-    _exif_fields = []
-    _iptc_fields = []
-    _ignored_tags = []
-    _test_image = None
-
-    @property
-    def use_exif(self):
-        return self._use_exif
-
-    @use_exif.setter
-    def use_exif(self, value):
-        self._use_exif = value
-        self._p_changed = True
-
-    @property
-    def use_iptc(self):
-        return self._use_iptc
-
-    @use_iptc.setter
-    def use_iptc(self, value):
-        self._use_iptc = value
-        self._p_changed = True
-
-    @property
-    def use_title(self):
-        return self._use_title
-
-    @use_title.setter
-    def use_title(self, value):
-        self._use_title = value
-        self._p_changed = True
+    def __init__(self):
+        self.use_exif = True
+        self.use_iptc = True
+        self.use_title = True
+        self._exif_fields = []
+        self._iptc_fields = []
+        self._ignored_tags = []
+        self._test_image = None
 
     @property
     def exif_fields(self):
