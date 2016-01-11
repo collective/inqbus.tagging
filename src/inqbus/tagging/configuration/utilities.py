@@ -73,6 +73,7 @@ class TaggingConfig(Persistent):
             'field': tag,
             'format': ''
         })
+        self._p_changed = True
 
     def add_iptc_tag(self, tag):
         self.iptc_fields.append({
@@ -80,6 +81,7 @@ class TaggingConfig(Persistent):
             'field': tag,
             'format': ''
         })
+        self._p_changed = True
 
 
 def get_use_exif():
