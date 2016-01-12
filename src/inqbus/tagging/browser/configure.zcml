@@ -69,4 +69,14 @@
       name="image_setter.js"
       file="static/js/image_setter.js" />
 
+    <browser:page
+    for="Products.CMFCore.interfaces._content.IFolderish"
+    name="fc-retag"
+    class=".actions.RetagActionView"
+    permission="cmf.ListFolderContents"
+    />
+  <utility component=".actions.RetagAction"
+           provides="plone.app.content.interfaces.IStructureAction"
+           name="retag" />
+
 </configure>

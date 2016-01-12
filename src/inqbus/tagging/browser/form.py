@@ -1,46 +1,50 @@
-from collective.z3cform.datagridfield import DataGridFieldFactory, DictRow
-from plone.supermodel import model
-from plone.autoform.form import AutoExtensibleForm
-from plone.app.registry.browser.controlpanel import RegistryEditForm, \
-    ControlPanelFormWrapper
 from Products.Five.browser import BrowserView
+from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
+from plone.autoform.form import AutoExtensibleForm
+from plone.supermodel import model
 from plone.z3cform import layout
-from plone.registry.interfaces import IRegistry
-from plone import api
-
-from zope import schema
 from z3c.form import field, button, form
-from zope.component import getUtility
 from z3c.relationfield.schema import RelationChoice
+from zope import schema
+from zope.component import getUtility
 
-
-from inqbus.tagging.configuration.utilities import (ITaggingConfig, get_exif_fields,
-    get_ignored_tags, get_iptc_fields, get_use_exif, get_use_iptc, get_use_title,
-    get_test_image)
-from inqbus.tagging.subscriber.functions import image_to_meta
+from collective.z3cform.datagridfield import DataGridFieldFactory, DictRow
+from inqbus.tagging.configuration.utilities import ITaggingConfig
+from inqbus.tagging.functions import get_use_exif, get_use_iptc, get_use_title, \
+    get_exif_fields, get_iptc_fields, get_ignored_tags_form, get_test_image, \
+    image_to_meta, get_use_lowercase
 
 
 class ITableRowFieldSchema(model.Schema):
-    field = schema.TextLine(title=u"Field", required=True)
-    format = schema.TextLine(title=u"Format String", required=False)
-    regex = schema.TextLine(title=u"Regular Expression", required=False)
+    field = schema.TextLine(title=u"Field", required=True,
+                            description=u'Add the name of the field.')
+    format = schema.TextLine(title=u"Format String", required=False,
+                             description=u'Add a format string to format field. Use unchanged value if nothing is set.')
+    regex = schema.TextLine(title=u"Regular Expression", required=False,
+                            description=u'Add Regular Expression to proof field value. Use all if nothing is set.')
 
 
 class ITableRowIgnoredSchema(model.Schema):
-     tag = schema.TextLine(title=u"Tag", required=True)
-     field = schema.TextLine(title=u"Field", required=False)
+    tag = schema.TextLine(title=u"Tag", required=True)
 
 
 class ITaggingFormSchema(model.Schema):
 
     use_exif = schema.Bool(title = u"Use Exif",
-                           defaultFactory=get_use_exif)
+                           defaultFactory=get_use_exif,
+                           description=u"Select if tags based on exif should be added.")
 
     use_iptc = schema.Bool(title = u"Use IPTC",
-                           defaultFactory=get_use_iptc)
+                           defaultFactory=get_use_iptc,
+                           description=u"Select if tags based on iptc should be added.")
 
     use_title = schema.Bool(title = u"Use Title",
-                            defaultFactory=get_use_title)
+                            defaultFactory=get_use_title,
+                            description=u"Select if tags based on title should be added.")
+
+    use_lowercase = schema.Bool(title = u"Use Title",
+                                defaultFactory=get_use_lowercase,
+                                description=u"Select if field names should be compared lowercased.")
 
     exif_fields = schema.List(
             title=u"Exif Fields",
@@ -64,7 +68,7 @@ class ITaggingFormSchema(model.Schema):
 
     ignored_tags = schema.List(
             title=u"Ignored Tags",
-            defaultFactory=get_ignored_tags,
+            defaultFactory=get_ignored_tags_form,
             value_type=DictRow(
                     title=u"Tags",
                     schema=ITableRowIgnoredSchema,
