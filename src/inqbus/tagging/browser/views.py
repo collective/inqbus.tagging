@@ -3,17 +3,19 @@ import json
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone import PloneMessageFactory as _
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.Five.browser import BrowserView
 from Products.PloneKeywordManager.browser.prefs_keywords_view import PrefsKeywordsView
 from plone import api
 from plone.app.content.browser.contents import FolderContentsView
 from plone.app.content.browser.file import TUS_ENABLED
 from plone.app.content.utils import json_dumps
+from plone.autoform.form import AutoExtensibleForm
 from plone.uuid.interfaces import IUUID
 from zope.component.hooks import getSite
 from zope.i18n import translate
-
 from inqbus.tagging import logger
 
+from inqbus.tagging import MessageFactory as _
 
 class OwnFolderContentsView(FolderContentsView):
 
@@ -115,3 +117,4 @@ class KeywordManagerView(PrefsKeywordsView):
                                                       limit)
 
         self.request.RESPONSE.redirect(url)
+

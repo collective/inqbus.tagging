@@ -33,6 +33,7 @@ setup(name='inqbus.tagging',
           'Products.PloneKeywordManager',
           'IPTCInfo',
           'exifread',
+          'python-xmp-toolkit',
           'Pillow',
           'plone.autoform'
       ],

@@ -6,14 +6,12 @@ import exifread
 
 from inqbus.tagging.config import ORIENTATIONS, HORIZONTAL_MIRROR, \
     VERTICAL_MIRROR
-from inqbus.tagging.functions import image_to_meta, get_iptc_fields, \
-    get_exif_fields, get_use_iptc, get_use_exif, get_use_lowercase, \
-    get_exif_fields_lowercase, get_iptc_fields_lowercase, add_tags
+from inqbus.tagging.functions import image_to_meta, add_tags, get_tagging_config
 
 
 def get_tags(image_tags, tag_config):
     tags = []
-    use_lower = get_use_lowercase()
+    use_lower = get_tagging_config().use_lowercase
     available_fields = []
     field_value = {}
     for key in image_tags.keys():
@@ -37,11 +35,19 @@ def get_tags(image_tags, tag_config):
         str_format = field_info[field]['format']
         value = field_value[field]
 
-        if not regex or re.match(regex, value):
-            if str_format:
-                tags.append(format(str_format, value))
-            else:
-                tags.append(value)
+        if regex:
+           match = re.search(regex, value.printable)
+           if match :
+                if str_format:
+                   tags.append(str_format.format(*match.groups()))
+                else:
+                   tags.append(match.group(0))
+           continue
+
+        if str_format:
+            tags.append(str_format.format(value.printable))
+        else:
+            tags.append(value.printable)
 
     return tags
 
@@ -49,25 +55,24 @@ def get_tags(image_tags, tag_config):
 def exif_to_tag(context, event):
 
     meta = image_to_meta(context)
+    tagging_config = get_tagging_config()
 
-    use_lower = get_use_lowercase()
-
-    if use_lower:
-        allowed_iptc = get_iptc_fields_lowercase()
-        allowed_exif = get_exif_fields_lowercase()
+    if tagging_config.use_lowercase:
+        allowed_iptc = tagging_config.iptc_fields_lowercase
+        allowed_exif = tagging_config.exif_fields_lowercase
     else:
-        allowed_exif = get_exif_fields()
-        allowed_iptc = get_iptc_fields()
+        allowed_exif = tagging_config.exif_fields
+        allowed_iptc = tagging_config.iptc_fields
 
     iptc = meta['iptc'].data
     exif = meta['exif']
 
     tags = list(context.Subject())
 
-    if get_use_iptc():
+    if tagging_config.use_iptc:
         tags = tags + get_tags(iptc, allowed_iptc)
 
-    if get_use_exif():
+    if tagging_config.use_exif:
         tags = tags + get_tags(exif, allowed_exif)
 
     add_tags(context, tags_to_add=tags)

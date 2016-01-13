@@ -10,67 +10,84 @@ from zope.component import getUtility
 
 from collective.z3cform.datagridfield import DataGridFieldFactory, DictRow
 from inqbus.tagging.configuration.utilities import ITaggingConfig
-from inqbus.tagging.functions import get_use_exif, get_use_iptc, get_use_title, \
-    get_exif_fields, get_iptc_fields, get_ignored_tags_form, get_test_image, \
-    image_to_meta, get_use_lowercase
+from inqbus.tagging.functions import get_ignored_tags_form, get_test_image, \
+    image_to_meta, get_tagging_config
+
+from inqbus.tagging import MessageFactory as _
 
 
 class ITableRowFieldSchema(model.Schema):
-    field = schema.TextLine(title=u"Field", required=True,
-                            description=u'Add the name of the field.')
-    format = schema.TextLine(title=u"Format String", required=False,
-                             description=u'Add a format string to format field. Use unchanged value if nothing is set.')
-    regex = schema.TextLine(title=u"Regular Expression", required=False,
-                            description=u'Add Regular Expression to proof field value. Use all if nothing is set.')
+    field = schema.TextLine(title=_(u"EXIF Field"), required=True,
+                            description=_(u'Add the name of the field.'))
+    format = schema.TextLine(title=_(u"Format String"), required=False,
+                             description=_(u'Add a format string to format the value or the cut out portion. Use unchanged value if nothing is set.'))
+    regex = schema.TextLine(title=_(u"Regular Expression"), required=False,
+                            description=_(u'Add Regular Expression to cut out a portion of the field value. Use all if nothing is set.'))
 
 
 class ITableRowIgnoredSchema(model.Schema):
-    tag = schema.TextLine(title=u"Tag", required=True)
+    tag = schema.TextLine(title=_(u"Tag"), required=True)
+
+
+class FieldFactory(object):
+
+    def __init__(self, field):
+        self.field = field
+
+    def __call__(self, *args, **kwargs):
+        config_store = get_tagging_config()
+        if config_store:
+            return  getattr(config_store, self.field, None)
+        return None
 
 
 class ITaggingFormSchema(model.Schema):
 
-    use_exif = schema.Bool(title = u"Use Exif",
-                           defaultFactory=get_use_exif,
-                           description=u"Select if tags based on exif should be added.")
+    use_exif = schema.Bool(title = _(u"Use Exif"),
+                           defaultFactory=FieldFactory('use_exif'),
+                           description=_(u"Select if tags based on exif should be added."))
 
-    use_iptc = schema.Bool(title = u"Use IPTC",
-                           defaultFactory=get_use_iptc,
-                           description=u"Select if tags based on iptc should be added.")
+    use_iptc = schema.Bool(title = _(u"Use IPTC"),
+                           defaultFactory=FieldFactory('use_iptc'),
+                           description=_(u"Select if tags based on iptc should be added."))
 
     use_title = schema.Bool(title = u"Use Title",
-                            defaultFactory=get_use_title,
-                            description=u"Select if tags based on title should be added.")
+                           defaultFactory=FieldFactory('use_title'),
+                           description=_(u"Select if tags based on title should be added."))
 
-    use_lowercase = schema.Bool(title = u"Use Title",
-                                defaultFactory=get_use_lowercase,
-                                description=u"Select if field names should be compared lowercased.")
+    use_lowercase = schema.Bool(title = _(u"Use Title"),
+                           defaultFactory=FieldFactory('use_lowercase'),
+                           description=_(u"Select if field names should be compared lowercased."))
 
     exif_fields = schema.List(
-            title=u"Exif Fields",
-            defaultFactory=get_exif_fields,
+            title=_(u"Exif Fields"),
+            description=_(u"""List of the EXIF fields that are transformed into tags. You may specify a regular expression to cut out one or more portions of the EXIF value. Also you may specify a new style format string to shape the output of the exif value or the cut out portions.
+Example: Value is "Newton, Issac", regex = "(\w+), (\w+)", format = "{1} {0}" -> Issac Newton"""),
+            defaultFactory=FieldFactory('exif_fields'),
             value_type=DictRow(
-                    title=u"Fields",
+                    title=_(u"Fields"),
                     schema=ITableRowFieldSchema,
                 ),
             required=False,
         )
 
     iptc_fields = schema.List(
-            title=u"IPTC Fields",
-            defaultFactory=get_iptc_fields,
+            title=_(u"IPTC Fields"),
+            description=_(u"""List of the IPTC fields that are transformed into tags. You may specify a regular expression to cut out a portion of the IPTC value. Also you may specify a format string to shape the output of the exif value or the cut out portion."""),
+            defaultFactory=FieldFactory('iptc_fields'),
             value_type=DictRow(
-                    title=u"Fields",
+                    title=_(u"Fields"),
                     schema=ITableRowFieldSchema,
                 ),
             required=False,
         )
 
     ignored_tags = schema.List(
-            title=u"Ignored Tags",
+            title=_(u"Ignored Title Tags"),
+            description=_(u"List of Tags that are ignored, if importing the title to tags."),
             defaultFactory=get_ignored_tags_form,
             value_type=DictRow(
-                    title=u"Tags",
+                    title=_(u"Tags"),
                     schema=ITableRowIgnoredSchema,
                 ),
             required=False,
@@ -90,8 +107,8 @@ class TaggingForm(AutoExtensibleForm, form.Form):
     fields['iptc_fields'].widgetFactory = DataGridFieldFactory
     fields['ignored_tags'].widgetFactory = DataGridFieldFactory
 
-    label = u"What's your name?"
-    description = u"Simple, sample form"
+    label = _(u"Inqbus.tagging EXIF Config")
+    description = _(u"Here you can specify if and which exif information is tranlated into tags")
 
     @button.buttonAndHandler(u'Ok')
     def handleApply(self, action):
@@ -100,7 +117,7 @@ class TaggingForm(AutoExtensibleForm, form.Form):
             self.status = self.formErrorsMessage
             return
 
-        config_store = getUtility(ITaggingConfig)
+        config_store = get_tagging_config()
 
         for field in data:
             setattr(config_store, field, data[field])
@@ -126,8 +143,8 @@ class TagSettingsView(BrowserView):
         return view()
 
 class ITagImportExif(model.Schema):
-    test_image = RelationChoice(title=u"Select EXIF-Tags from Image",
-                               description=u"Here you can select an image to pick EXIF tags for the whitelists",
+    test_image = RelationChoice(title=_(u"Select EXIF-Tags from Image"),
+                               description=_(u"Here you can select an image to pick EXIF tags for the whitelists"),
                                vocabulary="plone.app.vocabularies.Catalog",
                                required=False,
                                defaultFactory=get_test_image
@@ -140,7 +157,7 @@ class TagImportExifEditForm(AutoExtensibleForm, form.EditForm):
     """
     ignoreContext = True
     schema = ITagImportExif
-    label = u"Inqbus Tagging Settings - Import Tags"
+    label = _(u"Inqbus Tagging Settings - Import Tags")
 
 
     def __init__(self, context, request):
@@ -148,7 +165,7 @@ class TagImportExifEditForm(AutoExtensibleForm, form.EditForm):
 
     def updateFields(self):
         super(TagImportExifEditForm, self).updateFields()
-        config_store = getUtility(ITaggingConfig)
+        config_store = get_tagging_config()
         test_image = config_store.test_image
         if test_image and test_image.portal_type and test_image.portal_type == 'Image':
             exif = image_to_meta(test_image)['exif']
@@ -164,7 +181,7 @@ class TagImportExifEditForm(AutoExtensibleForm, form.EditForm):
                                             default=False))
 
     def applyChanges(self, data):
-        config_store = getUtility(ITaggingConfig)
+        config_store = get_tagging_config()
         for field in data:
             if field == 'test_image' and data['test_image']:
                 config_store.test_image = data['test_image']
@@ -202,8 +219,8 @@ class TagImportExifView(BrowserView):
 
 
 class ITagImportIptc(ITagImportExif):
-    test_image = RelationChoice(title=u"Select IPTC-Tags from Image",
-                               description=u"Here you can select an image to pick IPTC tags for the whitelists",
+    test_image = RelationChoice(title=_(u"Select IPTC-Tags from Image"),
+                               description=_(u"Here you can select an image to pick IPTC tags for the whitelists"),
                                vocabulary="plone.app.vocabularies.Catalog",
                                required=False,
                                defaultFactory=get_test_image
@@ -213,12 +230,14 @@ class ITagImportIptc(ITagImportExif):
 class TagImportIptcEditForm(TagImportExifEditForm):
 
     schema = ITagImportIptc
+    label = _(u"Inqbus Tagging Settings - Import Tags")
+
     def __init__(self, context, request):
         super(TagImportExifEditForm, self).__init__(context, request)
 
     def updateFields(self):
         super(TagImportExifEditForm, self).updateFields()
-        config_store = getUtility(ITaggingConfig)
+        config_store = get_tagging_config()
         test_image = config_store.test_image
         if test_image and test_image.portal_type and test_image.portal_type == 'Image':
             exif = image_to_meta(test_image)['iptc'].data
@@ -234,7 +253,7 @@ class TagImportIptcEditForm(TagImportExifEditForm):
                                             default=False))
 
     def applyChanges(self, data):
-        config_store = getUtility(ITaggingConfig)
+        config_store = get_tagging_config()
         for field in data:
             if field == 'test_image' and data['test_image']:
                 config_store.test_image = data['test_image']

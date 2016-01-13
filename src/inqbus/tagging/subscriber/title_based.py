@@ -1,8 +1,9 @@
-from inqbus.tagging.functions import get_use_title, add_tags
+from inqbus.tagging.functions import add_tags, get_tagging_config
 
 
 def image_title_to_tag(context, event):
-    if get_use_title():
+    tagging_config = get_tagging_config()
+    if tagging_config.use_title:
         image = context.image
 
         filename = image.filename
@@ -16,7 +17,8 @@ def image_title_to_tag(context, event):
 
 
 def title_to_tag(event):
-    if get_use_title():
+    tagging_config = get_tagging_config()
+    if tagging_config.use_title:
 
         context = event.object
         object_title_to_tag(context)

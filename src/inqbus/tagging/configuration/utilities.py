@@ -1,7 +1,10 @@
 from persistent import Persistent
+from persistent.list import PersistentList
+
 from zope.interface import Attribute
 from zope.interface import implements
 from zope.interface.interface import Interface
+
 
 
 class ITaggingConfig(Interface):
@@ -20,14 +23,16 @@ class ITaggingConfig(Interface):
     ignored_tags = Attribute("List holding information for ignoring tags")
 
 
+
 class TaggingConfig(Persistent):
     implements(ITaggingConfig)
 
+    use_exif = True
+    use_iptc = True
+    use_title = True
+    use_lowercase = True
+
     def __init__(self):
-        self.use_exif = True
-        self.use_iptc = True
-        self.use_title = True
-        self.use_lowercase = True
         self._exif_fields = []
         self._iptc_fields = []
         self.iptc_fields_lowercase = []

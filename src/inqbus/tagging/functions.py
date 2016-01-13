@@ -3,53 +3,16 @@ from iptcinfo import IPTCInfo
 
 from StringIO import StringIO
 
-from zope.component import getUtility
+from zope.component import getUtility, queryUtility
 
 from inqbus.tagging.configuration.utilities import ITaggingConfig
 
 
-def get_use_exif():
-    config_store = getUtility(ITaggingConfig)
-    return config_store.use_exif
-
-
-def get_use_iptc():
-    config_store = getUtility(ITaggingConfig)
-    return config_store.use_iptc
-
-
-def get_use_title():
-    config_store = getUtility(ITaggingConfig)
-    return config_store.use_title
-
-
-def get_use_lowercase():
-    config_store = getUtility(ITaggingConfig)
-    return config_store.use_lowercase
-
-
-def get_exif_fields():
-    config_store = getUtility(ITaggingConfig)
-    return config_store.exif_fields
-
-
-def get_iptc_fields():
-    config_store = getUtility(ITaggingConfig)
-    return config_store.iptc_fields
-
-
-def get_exif_fields_lowercase():
-    config_store = getUtility(ITaggingConfig)
-    return config_store.exif_fields_lowercase
-
-
-def get_iptc_fields_lowercase():
-    config_store = getUtility(ITaggingConfig)
-    return config_store.iptc_fields_lowercase
-
+def get_tagging_config():
+    return queryUtility(ITaggingConfig,"TaggingConfig")
 
 def get_ignored_tags():
-    config_store = getUtility(ITaggingConfig)
+    config_store = getUtility(ITaggingConfig,"TaggingConfig")
     return config_store.ignored_tags
 
 
@@ -62,7 +25,7 @@ def get_ignored_tags_form():
 
 
 def get_test_image():
-    config_store = getUtility(ITaggingConfig)
+    config_store = get_tagging_config()
     return config_store.test_image
 
 
