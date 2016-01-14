@@ -55,7 +55,7 @@ class ITaggingFormSchema(model.Schema):
                            defaultFactory=FieldFactory('use_title'),
                            description=_(u"Select if tags based on title should be added."))
 
-    use_lowercase = schema.Bool(title = _(u"Use Title"),
+    use_lowercase = schema.Bool(title = _(u"Use lowercased Title"),
                            defaultFactory=FieldFactory('use_lowercase'),
                            description=_(u"Select if field names should be compared lowercased."))
 

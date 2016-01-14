@@ -35,7 +35,7 @@ def test_suite():
 
         # Unit tests
         #doctestunit.DocFileSuite(
-        #    'README.txt', package='inqbus.tagging',
+        #    'README.rst', package='inqbus.tagging',
         #    setUp=testing.setUp, tearDown=testing.tearDown),
 
         #doctestunit.DocTestSuite(

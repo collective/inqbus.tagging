@@ -5,8 +5,8 @@ version = '1.0'
 
 setup(name='inqbus.tagging',
       version=version,
-      description="Example Dexterity Product",
-      long_description=open("README.txt").read() + "\n" +
+      description="A tagging tool for Plone",
+      long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -16,9 +16,9 @@ setup(name='inqbus.tagging',
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
       keywords='',
-      author='',
-      author_email='',
-      url='http://svn.plone.org/svn/collective/',
+      author='Volker Jaenisch, Sandra Rum',
+      author_email='volker.jaenisch@inqbus.de',
+      url='https://hg.inqbus.de/volker/fga/inqbus.tagging/summary',
       license='GPL',
       packages=find_packages('src'),
       package_dir = {'': 'src'},
@@ -35,7 +35,11 @@ setup(name='inqbus.tagging',
           'exifread',
           'python-xmp-toolkit',
           'Pillow',
-          'plone.autoform'
+          'plone.autoform',
+          'collective.z3cform.datagridfield'
+      ],
+      dependency_links=[
+        "git+https://github.com/sandrarum/collective.z3cform.datagridfield.git#egg=inqbus.mailcenter.theming"
       ],
       entry_points="""
       # -*- Entry points: -*-
