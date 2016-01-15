@@ -39,7 +39,7 @@ setup(name='inqbus.tagging',
           'collective.z3cform.datagridfield'
       ],
       dependency_links=[
-        "git+https://github.com/sandrarum/collective.z3cform.datagridfield.git#egg=inqbus.mailcenter.theming"
+        "git+https://github.com/sandrarum/collective.z3cform.datagridfield.git#egg=collective.z3cform.datagridfield"
       ],
       entry_points="""
       # -*- Entry points: -*-
