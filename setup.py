@@ -33,7 +33,6 @@ setup(name='inqbus.tagging',
           'Products.PloneKeywordManager',
           'IPTCInfo',
           'exifread',
-          'python-xmp-toolkit',
           'Pillow',
           'plone.autoform',
           'collective.z3cform.datagridfield'

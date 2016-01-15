@@ -93,6 +93,101 @@ Example: Value is "Newton, Issac", regex = "(\w+), (\w+)", format = "{1} {0}" ->
             required=False,
         )
 
+
+# import re
+#
+# def _searchXMLContent(b) :
+#         """
+#         Extract the XMP content from the byte stream, using a regular expression search
+#         @param b: byte stream of the image content
+#         @return: RDF data as a string
+#         @rtype: string
+#         """
+#         rdfpat = r"(?sm)^.*(<rdf:RDF.*</rdf:RDF>)"
+#         r_rdf = re.compile(rdfpat)
+#         q = r_rdf.search(b)
+#         assert q != None, "Could not find the XMP content in the file"
+#         return q.group(1)
+#
+#
+# import xml.etree.ElementTree as ET
+#
+# openfile = open("/picture_store/bilder/2015/2015_01_10_intronisationsfeier_FCH/very_best/small/small_IMG_5097.jpg")
+# xml = _searchXMLContent(openfile.read())
+# root = ET.fromstring(xml)
+#
+# pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#
+# from libxmp import XMPFiles, consts, XMPError
+#
+# def object_to_dict(xmp):
+#     """
+#     Extracts all XMP data from a given XMPMeta instance organizing it into a
+#     standard Python dictionary.
+#     """
+#     # resulting dictionary
+#     dxmp = dict()
+#
+#     if not xmp:
+#         return {}
+#
+#     # get iterator
+#     iter = xmp.__iter__()
+#
+#     # loop over all content
+#     while True:
+#         try:
+#             item = iter.next()
+#         except StopIteration:
+#             break
+#         print item
+#
+#         # Ignore schema items
+#         if item[-1]['IS_SCHEMA']:
+#             continue
+#         elif item[-1]['VALUE_IS_ARRAY']:
+#             idx = 1
+#             res = []
+#             while True:
+#                 try:
+#                     # get array item
+#                     res.append(xmp.get_array_item(item[0], item[1], idx))
+#                     idx += 1
+#                     # skip array item in iter
+#                     iter.next()
+#                 except XMPError:
+#                     # We've gone through the entire list. It does not exist.
+#                     break
+#
+#             dxmp[item[1]] = res
+#         else:
+#             # store simple key value
+#             dxmp[item[1]] = item[2]
+#
+#     return dxmp
+#
+# #xmp = XMPFiles( file_path="/picture_store/bilder/2015/2015_01_10_intronisationsfeier_FCH/very_best/small/small_IMG_5097.jpg").get_xmp()
+# #print object_to_dict(xmp)
+
+
 class TaggingForm(AutoExtensibleForm, form.Form):
     """ Define Form handling
 
