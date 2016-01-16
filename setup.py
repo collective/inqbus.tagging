@@ -35,7 +35,7 @@ setup(name='inqbus.tagging',
           'exifread',
           'Pillow',
           'plone.autoform',
-          'collective.z3cform.datagridfield'
+#          'collective.z3cform.datagridfield'
       ],
       dependency_links=[
         "git+https://github.com/sandrarum/collective.z3cform.datagridfield.git#egg=collective.z3cform.datagridfield"

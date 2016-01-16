@@ -9,6 +9,7 @@ from plone.app.content.browser.contents import ContentsBaseAction
 from plone.app.content.interfaces import IStructureAction
 from zope.i18n import translate
 from zope.interface import implementer
+from inqbus.tagging.functions import get_tagging_config
 
 from inqbus.tagging.subscriber.exif_based import exif_to_tag
 from inqbus.tagging.subscriber.title_based import object_title_to_tag, \
@@ -48,6 +49,7 @@ class RetagActionView(ContentsBaseAction):
 
         catalog = getToolByName(context, 'portal_catalog')
         mtool = getToolByName(context, 'portal_membership')
+        config = get_tagging_config()
 
         missing = []
         for key in self.request.form.keys():
@@ -68,9 +70,12 @@ class RetagActionView(ContentsBaseAction):
             sp = transaction.savepoint(optimistic=True)
 
             try:
-                object_title_to_tag(obj)
-                exif_to_tag(obj, None)
-                image_title_to_tag(obj, None)
+                if config.use_title:
+                    object_title_to_tag(obj)
+                if config.use_exif:
+                    exif_to_tag(obj, None)
+                if config.use_title:
+                    image_title_to_tag(obj, None)
             except ConflictError:
                 raise
             except Exception:
