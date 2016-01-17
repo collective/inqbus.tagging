@@ -65,7 +65,7 @@ class ITaggingFormSchema(model.Schema):
 Example: Value is "Newton, Issac", regex = "(\w+), (\w+)", format = "{1} {0}" -> Issac Newton"""),
             defaultFactory=FieldFactory('exif_fields'),
             value_type=DictRow(
-                    title=_(u"Fields"),
+                    title=_(u"EXIF Fields"),
                     schema=ITableRowFieldSchema,
                 ),
             required=False,
@@ -76,11 +76,23 @@ Example: Value is "Newton, Issac", regex = "(\w+), (\w+)", format = "{1} {0}" ->
             description=_(u"""List of the IPTC fields that are transformed into tags. You may specify a regular expression to cut out a portion of the IPTC value. Also you may specify a format string to shape the output of the exif value or the cut out portion."""),
             defaultFactory=FieldFactory('iptc_fields'),
             value_type=DictRow(
-                    title=_(u"Fields"),
+                    title=_(u"IPTC Fields"),
                     schema=ITableRowFieldSchema,
                 ),
             required=False,
         )
+
+    xmp_fields = schema.List(
+            title=_(u"XMP Fields"),
+            description=_(u"""List of the XMP fields that are transformed into tags. You may specify a regular expression to cut out a portion of the XMP value. Also you may specify a format string to shape the output of the exif value or the cut out portion."""),
+            defaultFactory=FieldFactory('xmp_fields'),
+            value_type=DictRow(
+                    title=_(u"XMP Fields"),
+                    schema=ITableRowFieldSchema,
+                ),
+            required=False,
+        )
+
 
     ignored_tags = schema.List(
             title=_(u"Ignored Title Tags"),
@@ -93,99 +105,6 @@ Example: Value is "Newton, Issac", regex = "(\w+), (\w+)", format = "{1} {0}" ->
             required=False,
         )
 
-
-# import re
-#
-# def _searchXMLContent(b) :
-#         """
-#         Extract the XMP content from the byte stream, using a regular expression search
-#         @param b: byte stream of the image content
-#         @return: RDF data as a string
-#         @rtype: string
-#         """
-#         rdfpat = r"(?sm)^.*(<rdf:RDF.*</rdf:RDF>)"
-#         r_rdf = re.compile(rdfpat)
-#         q = r_rdf.search(b)
-#         assert q != None, "Could not find the XMP content in the file"
-#         return q.group(1)
-#
-#
-# import xml.etree.ElementTree as ET
-#
-# openfile = open("/picture_store/bilder/2015/2015_01_10_intronisationsfeier_FCH/very_best/small/small_IMG_5097.jpg")
-# xml = _searchXMLContent(openfile.read())
-# root = ET.fromstring(xml)
-#
-# pass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
-# from libxmp import XMPFiles, consts, XMPError
-#
-# def object_to_dict(xmp):
-#     """
-#     Extracts all XMP data from a given XMPMeta instance organizing it into a
-#     standard Python dictionary.
-#     """
-#     # resulting dictionary
-#     dxmp = dict()
-#
-#     if not xmp:
-#         return {}
-#
-#     # get iterator
-#     iter = xmp.__iter__()
-#
-#     # loop over all content
-#     while True:
-#         try:
-#             item = iter.next()
-#         except StopIteration:
-#             break
-#         print item
-#
-#         # Ignore schema items
-#         if item[-1]['IS_SCHEMA']:
-#             continue
-#         elif item[-1]['VALUE_IS_ARRAY']:
-#             idx = 1
-#             res = []
-#             while True:
-#                 try:
-#                     # get array item
-#                     res.append(xmp.get_array_item(item[0], item[1], idx))
-#                     idx += 1
-#                     # skip array item in iter
-#                     iter.next()
-#                 except XMPError:
-#                     # We've gone through the entire list. It does not exist.
-#                     break
-#
-#             dxmp[item[1]] = res
-#         else:
-#             # store simple key value
-#             dxmp[item[1]] = item[2]
-#
-#     return dxmp
-#
-# #xmp = XMPFiles( file_path="/picture_store/bilder/2015/2015_01_10_intronisationsfeier_FCH/very_best/small/small_IMG_5097.jpg").get_xmp()
-# #print object_to_dict(xmp)
 
 
 class TaggingForm(AutoExtensibleForm, form.Form):
@@ -325,7 +244,7 @@ class ITagImportIptc(ITagImportExif):
 class TagImportIptcEditForm(TagImportExifEditForm):
 
     schema = ITagImportIptc
-    label = _(u"Inqbus Tagging Settings - Import Tags")
+    label = _(u"Inqbus Tagging Settings - Import IPTC Tags")
 
     def __init__(self, context, request):
         super(TagImportExifEditForm, self).__init__(context, request)
@@ -365,6 +284,63 @@ class TagImportIptcView(BrowserView):
 
     def __call__(self, *args, **kwargs):
         view_factor = layout.wrap_form(TagImportIptcEditForm,
+                                       ControlPanelFormWrapper)
+        view = view_factor(self.context, self.request)
+        return view()
+
+
+class ITagImportXMP(ITagImportExif):
+    test_image = RelationChoice(title=_(u"Select XMP-Tags from Image"),
+                               description=_(u"Here you can select an image to pick XMPtags for the whitelists"),
+                               vocabulary="plone.app.vocabularies.Catalog",
+                               required=False,
+                               defaultFactory=get_test_image
+                               )
+
+
+class TagImportXMPEditForm(TagImportExifEditForm):
+
+    schema = ITagImportXMP
+    label = _(u"Inqbus Tagging Settings - Import XMP Tags")
+
+    def __init__(self, context, request):
+        super(TagImportExifEditForm, self).__init__(context, request)
+
+    def updateFields(self):
+        super(TagImportExifEditForm, self).updateFields()
+        config_store = get_tagging_config()
+        test_image = config_store.test_image
+        if test_image and test_image.portal_type and test_image.portal_type == 'Image':
+            exif = image_to_meta(test_image)['xmp']
+            exif_keys = exif.keys()
+            exif_keys.sort()
+            for exif_key in exif_keys:
+                exif_field = exif[exif_key]
+                if str(exif_field) and len(str(exif_field)) < 100 :
+                    self.fields += field.Fields(schema.Bool(
+                                            __name__=str(exif_key),
+                                            title=unicode(exif_key),
+                                            description=unicode("Example: " +str(exif_field)),
+                                            default=False))
+
+    def applyChanges(self, data):
+        config_store = get_tagging_config()
+        for field in data:
+            if field == 'test_image' and data['test_image']:
+                config_store.test_image = data['test_image']
+                self.context.REQUEST.RESPONSE.redirect(self.request["ACTUAL_URL"])
+            elif data[field]:
+                config_store.add_iptc_tag(field)
+
+
+class TagImportXMPView(BrowserView):
+    """
+    View which wrap the settings form using ControlPanelFormWrapper to a
+    HTML boilerplate frame.
+    """
+
+    def __call__(self, *args, **kwargs):
+        view_factor = layout.wrap_form(TagImportXMPEditForm,
                                        ControlPanelFormWrapper)
         view = view_factor(self.context, self.request)
         return view()

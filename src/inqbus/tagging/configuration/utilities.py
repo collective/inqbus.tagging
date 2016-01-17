@@ -12,13 +12,15 @@ class ITaggingConfig(Interface):
 
     use_iptc = Attribute("Boolean describing if iptc should be converted to tags")
 
-    use_title = Attribute("Boolean describing if title should be converted to tags")
+    use_xmp = Attribute("Boolean describing if XMP should be converted to tags")
 
-    use_lowercase = Attribute("Boolean describing if tag-names should be used lowercase or uppercase")
+    use_title = Attribute("Boolean describing if title should be converted to tags")
 
     exif_fields = Attribute("List holding information for converting exif")
 
     iptc_fields = Attribute("List holding information for converting iptc")
+
+    xmp_fields = Attribute("List holding information for converting XMP")
 
     ignored_tags = Attribute("List holding information for ignoring tags")
 
@@ -29,14 +31,13 @@ class TaggingConfig(Persistent):
 
     use_exif = True
     use_iptc = True
+    use_xmp = True
     use_title = True
-    use_lowercase = True
 
     def __init__(self):
         self._exif_fields = []
         self._iptc_fields = []
-        self.iptc_fields_lowercase = []
-        self.exif_fields_lowercase = []
+        self._xmp_fields = []
         self._ignored_tags = []
         self._test_image = None
 
@@ -48,12 +49,6 @@ class TaggingConfig(Persistent):
     def exif_fields(self, value):
         self._exif_fields = value
         self.exif_fields_lowercase = []
-        for dict in value:
-            self.exif_fields_lowercase.append({
-                'regex': dict['regex'],
-                'field': dict['field'].lower(),
-                'format': dict['format']
-            })
         self._p_changed = True
 
     @property
@@ -64,13 +59,18 @@ class TaggingConfig(Persistent):
     def iptc_fields(self, value):
         self._iptc_fields = value
         self.iptc_fields_lowercase = []
-        for dict in value:
-            self.iptc_fields_lowercase.append({
-                'regex': dict['regex'],
-                'field': dict['field'].lower(),
-                'format': dict['format']
-            })
         self._p_changed = True
+
+    @property
+    def xmp_fields(self):
+        return self._xmp_fields
+
+    @xmp_fields.setter
+    def xmp_fields(self, value):
+        self._xmp_fields = value
+        self.xmp_fields_lowercase = []
+        self._p_changed = True
+
 
     @property
     def ignored_tags(self):
@@ -98,13 +98,6 @@ class TaggingConfig(Persistent):
             'field': unicode(tag),
             'format': None
         })
-        self.exif_fields_lowercase.append(
-            {
-            'regex': None,
-            'field': unicode(tag).lower(),
-            'format': None
-            }
-        )
         self._p_changed = True
 
     def add_iptc_tag(self, tag):
@@ -113,12 +106,13 @@ class TaggingConfig(Persistent):
             'field': unicode(tag),
             'format': None
         })
-        self.iptc_fields_lowercase.append(
-            {
-            'regex': None,
-            'field': unicode(tag).lower(),
-            'format': None
-            }
-        )
         self._p_changed = True
 
+
+    def add_xmp_tag(self, tag):
+        self.xmp_fields.append({
+            'regex': None,
+            'field': unicode(tag),
+            'format': None
+        })
+        self._p_changed = True

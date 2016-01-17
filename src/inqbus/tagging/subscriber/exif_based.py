@@ -11,16 +11,11 @@ from inqbus.tagging.functions import image_to_meta, add_tags, get_tagging_config
 
 def get_tags(image_tags, tag_config):
     tags = []
-    use_lower = get_tagging_config().use_lowercase
     available_fields = []
     field_value = {}
     for key in image_tags.keys():
-        if use_lower:
-            available_fields.append(str(key).lower())
-            field_value[str(key).lower()] = image_tags[key]
-        else:
-            available_fields.append(str(key))
-            field_value[str(key)] = image_tags[key]
+        available_fields.append(str(key))
+        field_value[str(key)] = image_tags[key]
     allowed_fields = []
     field_info = {}
     for dict in tag_config:
@@ -54,18 +49,20 @@ def get_tags(image_tags, tag_config):
 
 def exif_to_tag(context, event):
 
-    meta = image_to_meta(context)
     tagging_config = get_tagging_config()
 
-    if tagging_config.use_lowercase:
-        allowed_iptc = tagging_config.iptc_fields_lowercase
-        allowed_exif = tagging_config.exif_fields_lowercase
-    else:
-        allowed_exif = tagging_config.exif_fields
-        allowed_iptc = tagging_config.iptc_fields
+    meta = image_to_meta(context,
+                         use_exif=tagging_config.use_exif,
+                         use_iptc=tagging_config.use_iptc,
+                         use_xmp=tagging_config.use_xmp)
+
+    allowed_exif = tagging_config.exif_fields
+    allowed_iptc = tagging_config.iptc_fields
+    allowed_xmp = tagging_config.xmp_fields
 
     iptc = meta['iptc'].data
     exif = meta['exif']
+    xmp = meta['xmp']
 
     tags = list(context.Subject())
 
@@ -74,6 +71,9 @@ def exif_to_tag(context, event):
 
     if tagging_config.use_exif:
         tags = tags + get_tags(exif, allowed_exif)
+
+    if tagging_config.use_xmp:
+        tags = tags + get_tags(xmp, allowed_xmp)
 
     add_tags(context, tags_to_add=tags)
 

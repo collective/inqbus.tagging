@@ -65,6 +65,14 @@
         permission="cmf.ManagePortal"
         />
 
+    <browser:page
+        name="inqbus-tagging-xmp-import"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        class=".form.TagImportXMPView"
+        permission="cmf.ManagePortal"
+        />
+
+
     <browser:resource
       name="image_setter.js"
       file="static/js/image_setter.js" />

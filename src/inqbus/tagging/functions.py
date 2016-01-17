@@ -6,6 +6,7 @@ from StringIO import StringIO
 from zope.component import getUtility, queryUtility
 
 from inqbus.tagging.configuration.utilities import ITaggingConfig
+from inqbus.tagging.subscriber import xmp
 
 
 def get_tagging_config():
@@ -29,7 +30,7 @@ def get_test_image():
     return config_store.test_image
 
 
-def image_to_meta(context):
+def image_to_meta(context, use_exif=True, use_iptc=True, use_xmp=True ):
 
     meta = {}
     image = context.image
@@ -37,12 +38,25 @@ def image_to_meta(context):
 
     io = StringIO(data)
     io.seek(0)
-    meta['iptc'] = IPTCInfo(io, force=True)
-    io.seek(0)
-    meta['exif'] = exifread.process_file(io)
+    if use_iptc :
+        meta['iptc'] = IPTCInfo(io, force=True)
+        io.seek(0)
+    else:
+        meta['iptc'] = {}
+
+    if use_exif :
+        meta['exif'] = exifread.process_file(io)
+        io.seek(0)
+    else:
+        meta['exif'] = {}
+
+    if use_xmp :
+        meta['xmp'] = xmp.parse(image.data)
+        io.seek(0)
+    else:
+        meta['xmp'] = {}
 
     io.close()
-
     return meta
 
 
@@ -76,3 +90,7 @@ def add_tags(obj, tags_to_add=[]):
 
     obj.setSubject(clear_tags)
     obj.reindexObject()
+
+
+
+

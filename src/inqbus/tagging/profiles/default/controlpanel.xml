@@ -56,4 +56,18 @@
             <permission>Manage portal</permission>
     </configlet>
 
+    <configlet
+        title="Inqbus Tagging - XMP Tag Import"
+        action_id="inqbus.tagging.xmp.import"
+        appId="inqbus.tagging"
+        category="Products"
+        condition_expr=""
+        url_expr="string:${portal_url}/@@inqbus-tagging-xmp-import"
+        icon_expr=""
+        visible="True"
+        i18n:attributes="title">
+            <permission>Manage portal</permission>
+    </configlet>
+
+
 </object>
