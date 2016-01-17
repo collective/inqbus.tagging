@@ -48,7 +48,6 @@ class TaggingConfig(Persistent):
     @exif_fields.setter
     def exif_fields(self, value):
         self._exif_fields = value
-        self.exif_fields_lowercase = []
         self._p_changed = True
 
     @property
@@ -58,7 +57,6 @@ class TaggingConfig(Persistent):
     @iptc_fields.setter
     def iptc_fields(self, value):
         self._iptc_fields = value
-        self.iptc_fields_lowercase = []
         self._p_changed = True
 
     @property
@@ -68,9 +66,7 @@ class TaggingConfig(Persistent):
     @xmp_fields.setter
     def xmp_fields(self, value):
         self._xmp_fields = value
-        self.xmp_fields_lowercase = []
         self._p_changed = True
-
 
     @property
     def ignored_tags(self):
@@ -107,7 +103,6 @@ class TaggingConfig(Persistent):
             'format': None
         })
         self._p_changed = True
-
 
     def add_xmp_tag(self, tag):
         self.xmp_fields.append({

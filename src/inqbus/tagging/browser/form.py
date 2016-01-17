@@ -17,7 +17,7 @@ from inqbus.tagging import MessageFactory as _
 
 
 class ITableRowFieldSchema(model.Schema):
-    field = schema.TextLine(title=_(u"EXIF Field"), required=True,
+    field = schema.TextLine(title=_(u"Field"), required=True,
                             description=_(u'Add the name of the field.'))
     format = schema.TextLine(title=_(u"Format String"), required=False,
                              description=_(u'Add a format string to format the value or the cut out portion. Use unchanged value if nothing is set.'))
@@ -51,13 +51,14 @@ class ITaggingFormSchema(model.Schema):
                            defaultFactory=FieldFactory('use_iptc'),
                            description=_(u"Select if tags based on iptc should be added."))
 
+    use_xmp = schema.Bool(title = _(u"Use XMP"),
+                           defaultFactory=FieldFactory('use_xmp'),
+                           description=_(u"Select if tags based on xmp should be added."))
+
     use_title = schema.Bool(title = u"Use Title",
                            defaultFactory=FieldFactory('use_title'),
                            description=_(u"Select if tags based on title should be added."))
 
-    use_lowercase = schema.Bool(title = _(u"Use lowercased Title"),
-                           defaultFactory=FieldFactory('use_lowercase'),
-                           description=_(u"Select if field names should be compared lowercased."))
 
     exif_fields = schema.List(
             title=_(u"Exif Fields"),
@@ -119,6 +120,7 @@ class TaggingForm(AutoExtensibleForm, form.Form):
     fields = field.Fields(ITaggingFormSchema)
     fields['exif_fields'].widgetFactory = DataGridFieldFactory
     fields['iptc_fields'].widgetFactory = DataGridFieldFactory
+    fields['xmp_fields'].widgetFactory = DataGridFieldFactory
     fields['ignored_tags'].widgetFactory = DataGridFieldFactory
 
     label = _(u"Inqbus.tagging EXIF Config")
@@ -232,7 +234,7 @@ class TagImportExifView(BrowserView):
         return view()
 
 
-class ITagImportIptc(ITagImportExif):
+class ITagImportIptc(model.Schema):
     test_image = RelationChoice(title=_(u"Select IPTC-Tags from Image"),
                                description=_(u"Here you can select an image to pick IPTC tags for the whitelists"),
                                vocabulary="plone.app.vocabularies.Catalog",
@@ -241,7 +243,7 @@ class ITagImportIptc(ITagImportExif):
                                )
 
 
-class TagImportIptcEditForm(TagImportExifEditForm):
+class TagImportIptcEditForm(AutoExtensibleForm, form.EditForm):
 
     schema = ITagImportIptc
     label = _(u"Inqbus Tagging Settings - Import IPTC Tags")
@@ -250,7 +252,7 @@ class TagImportIptcEditForm(TagImportExifEditForm):
         super(TagImportExifEditForm, self).__init__(context, request)
 
     def updateFields(self):
-        super(TagImportExifEditForm, self).updateFields()
+        super(TagImportIptcEditForm, self).updateFields()
         config_store = get_tagging_config()
         test_image = config_store.test_image
         if test_image and test_image.portal_type and test_image.portal_type == 'Image':
@@ -289,7 +291,7 @@ class TagImportIptcView(BrowserView):
         return view()
 
 
-class ITagImportXMP(ITagImportExif):
+class ITagImportXMP(model.Schema):
     test_image = RelationChoice(title=_(u"Select XMP-Tags from Image"),
                                description=_(u"Here you can select an image to pick XMPtags for the whitelists"),
                                vocabulary="plone.app.vocabularies.Catalog",
@@ -298,29 +300,29 @@ class ITagImportXMP(ITagImportExif):
                                )
 
 
-class TagImportXMPEditForm(TagImportExifEditForm):
+class TagImportXMPEditForm(AutoExtensibleForm, form.EditForm):
 
     schema = ITagImportXMP
     label = _(u"Inqbus Tagging Settings - Import XMP Tags")
 
     def __init__(self, context, request):
-        super(TagImportExifEditForm, self).__init__(context, request)
+        super(TagImportXMPEditForm, self).__init__(context, request)
 
     def updateFields(self):
-        super(TagImportExifEditForm, self).updateFields()
+        super(TagImportXMPEditForm, self).updateFields()
         config_store = get_tagging_config()
         test_image = config_store.test_image
         if test_image and test_image.portal_type and test_image.portal_type == 'Image':
-            exif = image_to_meta(test_image)['xmp']
-            exif_keys = exif.keys()
-            exif_keys.sort()
-            for exif_key in exif_keys:
-                exif_field = exif[exif_key]
-                if str(exif_field) and len(str(exif_field)) < 100 :
+            xmp = image_to_meta(test_image)['xmp']
+            xmp_keys = xmp.keys()
+            xmp_keys.sort()
+            for xmp_key in xmp_keys:
+                xmp_field = xmp[xmp_key]
+                if str(xmp_field) and len(str(xmp_field)) < 100 :
                     self.fields += field.Fields(schema.Bool(
-                                            __name__=str(exif_key),
-                                            title=unicode(exif_key),
-                                            description=unicode("Example: " +str(exif_field)),
+                                            __name__=str(xmp_key),
+                                            title=unicode(xmp_key),
+                                            description=unicode("Example: " +str(xmp_field)),
                                             default=False))
 
     def applyChanges(self, data):
@@ -330,7 +332,7 @@ class TagImportXMPEditForm(TagImportExifEditForm):
                 config_store.test_image = data['test_image']
                 self.context.REQUEST.RESPONSE.redirect(self.request["ACTUAL_URL"])
             elif data[field]:
-                config_store.add_iptc_tag(field)
+                config_store.add_xmp_tag(field)
 
 
 class TagImportXMPView(BrowserView):
