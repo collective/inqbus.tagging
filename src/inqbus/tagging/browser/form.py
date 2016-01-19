@@ -243,7 +243,7 @@ class ITagImportIptc(model.Schema):
                                )
 
 
-class TagImportIptcEditForm(AutoExtensibleForm, form.EditForm):
+class TagImportIptcEditForm(TagImportExifEditForm):
 
     schema = ITagImportIptc
     label = _(u"Inqbus Tagging Settings - Import IPTC Tags")
@@ -300,7 +300,7 @@ class ITagImportXMP(model.Schema):
                                )
 
 
-class TagImportXMPEditForm(AutoExtensibleForm, form.EditForm):
+class TagImportXMPEditForm(TagImportExifEditForm):
 
     schema = ITagImportXMP
     label = _(u"Inqbus Tagging Settings - Import XMP Tags")
