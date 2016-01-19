@@ -59,6 +59,10 @@ class ITaggingFormSchema(model.Schema):
                            defaultFactory=FieldFactory('use_title'),
                            description=_(u"Select if tags based on title should be added."))
 
+    title_regex = schema.TextLine(title = _(u"Regular Expression for Title Tags"),
+                                defaultFactory=FieldFactory('title_regex'),
+                                description=_(u"Only words matching this Regular Expression are used as tag. If empty all words are added as tag."))
+
 
     exif_fields = schema.List(
             title=_(u"Exif Fields"),

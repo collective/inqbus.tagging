@@ -24,6 +24,8 @@ class ITaggingConfig(Interface):
 
     ignored_tags = Attribute("List holding information for ignoring tags")
 
+    title_regex = Attribute("String holding a regex to filter title words")
+
 
 
 class TaggingConfig(Persistent):
@@ -33,6 +35,7 @@ class TaggingConfig(Persistent):
     use_iptc = True
     use_xmp = True
     use_title = True
+    title_regex = u""
 
     def __init__(self):
         self._exif_fields = []
