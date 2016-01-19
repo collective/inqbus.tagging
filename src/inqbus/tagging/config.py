@@ -4,6 +4,8 @@
 PROJECT_NAME = 'inqbus.tagging'
 INSTALL_PROFILE = '{0}:default'.format(PROJECT_NAME)
 UNINSTALL_PROFILE = '{0}:uninstall'.format(PROJECT_NAME)
+TEST_DATA_PROFILE = '{0}:test_data'.format(PROJECT_NAME)
+
 # configuration for image rotation
 
 NO_MIRROR = 0
