@@ -41,6 +41,12 @@ setup(name='inqbus.tagging',
       dependency_links=[
         "git+https://github.com/sandrarum/collective.z3cform.datagridfield.git#egg=collective.z3cform.datagridfield"
       ],
+      extras_require={
+        'test': [
+            'plone.app.testing',
+            'plone.app.robotframework[debug]',
+        ],
+        },
       entry_points="""
       # -*- Entry points: -*-
       [z3c.autoinclude.plugin]

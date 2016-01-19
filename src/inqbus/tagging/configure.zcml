@@ -37,6 +37,14 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
+  <genericsetup:registerProfile
+      name="test_data"
+      title="Inqbus Tagging Test Data"
+      directory="profiles/test_data"
+      description='Test Data Profile for Inqbus Tagging'
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
   <!-- -*- extra stuff goes here -*- -->
   <include package=".subscriber" />
   <include package=".browser" />
