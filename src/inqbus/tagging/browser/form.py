@@ -252,7 +252,7 @@ class TagImportIptcEditForm(TagImportExifEditForm):
         super(TagImportIptcEditForm, self).__init__(context, request)
 
     def updateFields(self):
-        super(TagImportIptcEditForm, self).updateFields()
+        super(TagImportExifEditForm, self).updateFields()
         config_store = get_tagging_config()
         test_image = config_store.test_image
         if test_image and test_image.portal_type and test_image.portal_type == 'Image':
@@ -309,7 +309,7 @@ class TagImportXMPEditForm(TagImportExifEditForm):
         super(TagImportXMPEditForm, self).__init__(context, request)
 
     def updateFields(self):
-        super(TagImportXMPEditForm, self).updateFields()
+        super(TagImportExifEditForm, self).updateFields()
         config_store = get_tagging_config()
         test_image = config_store.test_image
         if test_image and test_image.portal_type and test_image.portal_type == 'Image':
