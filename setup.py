@@ -33,8 +33,9 @@ setup(name='inqbus.tagging',
           'Products.PloneKeywordManager',
           'IPTCInfo',
           'exifread',
-          'Pillow',
           'plone.autoform',
+          'cffi',
+          'jpegtran-cffi',
 #          'collective.z3cform.datagridfield'
       ],
       dependency_links=[

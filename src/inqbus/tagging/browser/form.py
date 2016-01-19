@@ -14,7 +14,7 @@ from inqbus.tagging.functions import get_ignored_tags_form, get_test_image, \
     image_to_meta, get_tagging_config
 
 from inqbus.tagging import MessageFactory as _
-
+from inqbus.tagging.subscriber import xmp
 
 class ITableRowFieldSchema(model.Schema):
     field = schema.TextLine(title=_(u"Field"), required=True,
@@ -316,12 +316,15 @@ class TagImportXMPEditForm(TagImportExifEditForm):
         super(TagImportExifEditForm, self).updateFields()
         config_store = get_tagging_config()
         test_image = config_store.test_image
+
         if test_image and test_image.portal_type and test_image.portal_type == 'Image':
-            xmp = image_to_meta(test_image)['xmp']
-            xmp_keys = xmp.keys()
+
+            xmp_data = xmp.parse(test_image.image.data)
+
+            xmp_keys = xmp_data.keys()
             xmp_keys.sort()
             for xmp_key in xmp_keys:
-                xmp_field = xmp[xmp_key]
+                xmp_field = xmp_data[xmp_key]
                 if str(xmp_field) and len(str(xmp_field)) < 100 :
                     self.fields += field.Fields(schema.Bool(
                                             __name__=str(xmp_key),

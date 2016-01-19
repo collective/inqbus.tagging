@@ -85,6 +85,13 @@ def exif_to_orientation(context, event):
     io = StringIO(data)
     io.seek(0)
 
+    from jpegtran import JPEGImage
+
+    jpeg_image = JPEGImage(blob=data)
+    image.data = jpeg_image.exif_autotransform().as_blob()
+
+    return
+
     exif_tags = exifread.process_file(io)
     orientation = get_orientation(exif_tags)
 
@@ -95,21 +102,22 @@ def exif_to_orientation(context, event):
 
     if orientation:
         rotation = ORIENTATIONS[orientation][1]
-        mirror = ORIENTATIONS[orientation][2]
+        if rotation:
+            mirror = ORIENTATIONS[orientation][2]
 
-        rotated_image = pil_image.rotate(360-rotation,
-                                         resample=PIL.Image.BICUBIC,
-                                         expand=True)
-        if mirror == HORIZONTAL_MIRROR:
-            rotated_image = rotated_image.transpose(PIL.Image.FLIP_LEFT_RIGHT)
-        elif mirror == VERTICAL_MIRROR:
-            rotated_image = rotated_image.transpose(PIL.Image.FLIP_TOP_BOTTOM)
+            rotated_image = pil_image.rotate(360-rotation,
+                                             resample=PIL.Image.BICUBIC,
+                                             expand=True)
+            if mirror == HORIZONTAL_MIRROR:
+                rotated_image = rotated_image.transpose(PIL.Image.FLIP_LEFT_RIGHT)
+            elif mirror == VERTICAL_MIRROR:
+                rotated_image = rotated_image.transpose(PIL.Image.FLIP_TOP_BOTTOM)
 
-        rotated_image.save(converted_img_io, 'JPEG', quality=100)
+            rotated_image.save(converted_img_io, 'JPEG', quality=100)
 
-        context.image.data = converted_img_io.getvalue()
+            context.image.data = converted_img_io.getvalue()
 
-        context.reindexObject()
+            context.reindexObject()
 
     converted_img_io.close()
     io.close()

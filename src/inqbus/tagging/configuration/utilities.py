@@ -1,6 +1,6 @@
 from persistent import Persistent
 from persistent.list import PersistentList
-
+from plone.api import content
 from zope.interface import Attribute
 from zope.interface import implements
 from zope.interface.interface import Interface
@@ -84,11 +84,15 @@ class TaggingConfig(Persistent):
 
     @property
     def test_image(self):
-        return self._test_image
+        try:
+            result = content.get(UID=self._test_image)
+        except Exception as e:
+            return None
+        return result
 
     @test_image.setter
     def test_image(self, value):
-        self._test_image = value
+        self._test_image = value.UID()
         self._p_changed = True
 
     def add_exif_tag(self, tag):

@@ -52,7 +52,6 @@ def image_to_meta(context, use_exif=True, use_iptc=True, use_xmp=True ):
 
     if use_xmp :
         meta['xmp'] = xmp.parse(image.data)
-        io.seek(0)
     else:
         meta['xmp'] = {}
 
