@@ -249,7 +249,7 @@ class TagImportIptcEditForm(AutoExtensibleForm, form.EditForm):
     label = _(u"Inqbus Tagging Settings - Import IPTC Tags")
 
     def __init__(self, context, request):
-        super(TagImportExifEditForm, self).__init__(context, request)
+        super(TagImportIptcEditForm, self).__init__(context, request)
 
     def updateFields(self):
         super(TagImportIptcEditForm, self).updateFields()
