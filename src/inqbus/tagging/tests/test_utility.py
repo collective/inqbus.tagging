@@ -83,3 +83,25 @@ class TestConfiguration(unittest.TestCase):
             'format': None
         }])
 
+    def test_getter_and_setter(self):
+        utility = queryUtility(ITaggingConfig, 'TaggingConfig')
+
+        utility.exif_fields = ['test']
+
+        self.assertEqual(utility.exif_fields, ['test'])
+        self.assertEqual(utility._exif_fields, ['test'])
+
+        utility.iptc_fields = ['test']
+
+        self.assertEqual(utility.iptc_fields, ['test'])
+        self.assertEqual(utility._iptc_fields, ['test'])
+
+        utility.xmp_fields = ['test']
+
+        self.assertEqual(utility.xmp_fields, ['test'])
+        self.assertEqual(utility._xmp_fields, ['test'])
+
+        utility.ignored_tags = [{'tag': 'test'}]
+        self.assertEqual(utility.ignored_tags, ['test'])
+        self.assertEqual(utility._ignored_tags, ['test'])
+
