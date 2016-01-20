@@ -6,7 +6,10 @@ import re
 def image_title_to_tag(context, event):
     tagging_config = get_tagging_config()
     if tagging_config.use_title:
-        image = context.image
+        if hasattr(context, 'image'):
+            image = context.image
+        else:
+            return
 
         filename = image.filename
 

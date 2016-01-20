@@ -60,7 +60,10 @@ def exif_to_tag(context, event):
     allowed_iptc = tagging_config.iptc_fields
     allowed_xmp = tagging_config.xmp_fields
 
-    iptc = meta['iptc'].data
+    if hasattr(meta['iptc'], 'data'):
+        iptc = meta['iptc'].data
+    else:
+        iptc = meta['iptc']
     exif = meta['exif']
     xmp = meta['xmp']
 

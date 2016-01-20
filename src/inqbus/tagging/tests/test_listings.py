@@ -4,7 +4,6 @@ except ImportError:
     import unittest
 
 # zope imports
-from Products.CMFPlone.utils import getToolByName
 from plone.app.testing import TEST_USER_ID, setRoles
 from zope.component import getMultiAdapter
 # local imports
