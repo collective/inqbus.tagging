@@ -50,7 +50,7 @@ class TestConfiguration(unittest.TestCase):
         utility = queryUtility(ITaggingConfig, 'TaggingConfig')
         self.assertTrue(utility.use_exif)
         self.assertTrue(utility.use_iptc)
-        self.assertTrue(utility.use_title)
+        self.assertFalse(utility.use_title)
         self.assertTrue(utility.use_xmp)
 
         self.assertEqual(utility.exif_fields, [])
