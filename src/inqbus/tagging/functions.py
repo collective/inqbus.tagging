@@ -33,7 +33,7 @@ def get_test_image():
 def image_to_meta(context, use_exif=True, use_iptc=True, use_xmp=True ):
 
     meta = {}
-    if hasattr(context, 'image'):
+    if hasattr(context, 'image') and context.image:
         image = context.image
     else:
         return {'iptc': {}, 'exif': {}, 'xmp': {}}

@@ -82,6 +82,9 @@ def exif_to_tag(context, event):
 
 
 def exif_to_orientation(context, event):
+
+    if not (hasattr(context, 'image') and context.image):
+        return
     image = context.image
     data = image.data
 

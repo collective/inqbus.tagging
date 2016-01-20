@@ -7,14 +7,25 @@ try:
 except ImportError:
     import unittest
 
+import os
+
 # zope imports
-from plone import api
-from plone.browserlayer.utils import registered_layers
+from plone.app.testing import TEST_USER_ID, setRoles
+from plone.namedfile.file import NamedBlobImage
 
 # local imports
-from inqbus.tagging.config import PROJECT_NAME
-from inqbus.tagging.interfaces import ILayer
+from inqbus.tagging.functions import image_to_meta, get_ignored_tags_form, \
+    get_tagging_config
 from inqbus.tagging.testing import INQBUS_TAGGING_INTEGRATION_TESTING
+from inqbus.tagging.configuration.utilities import TaggingConfig
+
+
+def image_by_path(path):
+    dirname, filename = os.path.split(path)
+    return NamedBlobImage(
+        data=open(path, 'r').read(),
+        filename=unicode(filename)
+    )
 
 
 class TestFunctions(unittest.TestCase):
@@ -22,55 +33,59 @@ class TestFunctions(unittest.TestCase):
 
     def setUp(self):
         self.portal = self.layer['portal']
+        self.request = self.layer['request']
+        setRoles(self.portal, TEST_USER_ID, ['Manager'])
 
-    def test_sample(self):
-        pass
+        self.portal.invokeFactory('Folder', 'test-folder')
 
+        self.folder = self.portal['test-folder']
 
-# class TestSetup(unittest.TestCase):
-#     """Validate setup process for inqbus.tagging."""
-#
-#     layer = INQBUS_TAGGING_INTEGRATION_TESTING
-#
-#     def setUp(self):
-#         """Additional test setup."""
-#         self.portal = self.layer['portal']
-#
-#     def test_product_is_installed(self):
-#         """Validate that our product is installed."""
-#         qi = api.portal.get_tool('portal_quickinstaller')
-#         self.assertTrue(qi.isProductInstalled(PROJECT_NAME))
-#
-#     def test_addon_layer(self):
-#         """Validate that the browserlayer for our product is installed."""
-#         self.assertIn(ILayer, registered_layers())
-#
-#     def test_collective_z3cform_datagridfield_installed(self):
-#         """Validate that collective.z3cform.datagridfield is installed."""
-#         qi = self.portal.portal_quickinstaller
-#         self.assertTrue(
-#             qi.isProductInstalled('collective.z3cform.datagridfield')
-#         )
-#
-#
-# class UninstallTestCase(unittest.TestCase):
-#     """Validate uninstall process for inqbus.tagging."""
-#
-#     layer = INQBUS_TAGGING_INTEGRATION_TESTING
-#
-#     def setUp(self):
-#         """Additional test setup."""
-#         self.portal = self.layer['portal']
-#
-#         qi = self.portal.portal_quickinstaller
-#         with api.env.adopt_roles(['Manager']):
-#             qi.uninstallProducts(products=[PROJECT_NAME])
-#
-#     def test_product_is_uninstalled(self):
-#         """Validate that our product is uninstalled."""
-#         qi = self.portal.portal_quickinstaller
-#         self.assertFalse(qi.isProductInstalled(PROJECT_NAME))
-#
-#     def test_addon_layer_removed(self):
-#         """Validate that the browserlayer is removed."""
-#         self.assertNotIn(ILayer, registered_layers())
+    def test_image_to_meta_no_image(self):
+        result = image_to_meta(None)
+
+        self.assertTrue(result)
+        self.assertTrue('iptc' in result)
+        self.assertTrue('exif' in result)
+        self.assertTrue('xmp' in result)
+
+    def test_get_config(self):
+        config = get_tagging_config()
+
+        self.assertIsInstance(config, TaggingConfig)
+
+    def test_get_ignored_tags_for_form(self):
+        config = get_tagging_config()
+
+        config._ignored_tags = ['test', 'hallo']
+
+        tags = get_ignored_tags_form()
+
+        self.assertTrue(len(tags) == 2)
+        self.assertTrue(tags[0] == {'tag': 'test'})
+        self.assertTrue(tags[1] == {'tag': 'hallo'})
+
+    def test_image_to_meta(self):
+        self.folder.invokeFactory('Image', 'testimage')
+
+        img = self.folder['testimage']
+
+        dirname, filename = os.path.split(os.path.abspath(__file__))
+
+        path = os.path.join(dirname, "test_images", "metadata-test-image-L.jpg")
+
+        img.image = image_by_path(path)
+        img.reindexObject()
+
+        meta = image_to_meta(img)
+
+        self.assertTrue(meta['iptc'])
+        self.assertTrue(meta['exif'])
+
+        meta = image_to_meta(img, use_exif=False)
+        self.assertTrue(meta['iptc'])
+        self.assertFalse(meta['exif'])
+
+        meta = image_to_meta(img, use_iptc=False)
+        self.assertTrue(meta['exif'])
+        self.assertFalse(meta['iptc'])
+
