@@ -5,7 +5,7 @@ version = '1.0'
 
 setup(name='inqbus.tagging',
       version=version,
-      description="A tagging tool for Plone",
+      description="Auto tagging for Plone",
       long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from
@@ -16,7 +16,7 @@ setup(name='inqbus.tagging',
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
       keywords='',
-      author='Volker Jaenisch, Sandra Rum',
+      author='Dr. Volker Jaenisch, Sandra Rum',
       author_email='volker.jaenisch@inqbus.de',
       url='https://hg.inqbus.de/volker/fga/inqbus.tagging/summary',
       license='GPL',
@@ -27,8 +27,6 @@ setup(name='inqbus.tagging',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'plone.app.dexterity',
-          'plone.namedfile [blobs]',
           # -*- Extra requirements: -*-
           'Products.PloneKeywordManager',
           'IPTCInfo',

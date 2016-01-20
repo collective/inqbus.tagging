@@ -47,21 +47,7 @@ class ITaggingFormSchema(model.Schema):
                            defaultFactory=FieldFactory('use_exif'),
                            description=_(u"Select if tags based on exif should be added."))
 
-    use_iptc = schema.Bool(title = _(u"Use IPTC"),
-                           defaultFactory=FieldFactory('use_iptc'),
-                           description=_(u"Select if tags based on iptc should be added."))
 
-    use_xmp = schema.Bool(title = _(u"Use XMP"),
-                           defaultFactory=FieldFactory('use_xmp'),
-                           description=_(u"Select if tags based on xmp should be added."))
-
-    use_title = schema.Bool(title = u"Use Title",
-                           defaultFactory=FieldFactory('use_title'),
-                           description=_(u"Select if tags based on title should be added."))
-
-    title_regex = schema.TextLine(title = _(u"Regular Expression for Title Tags"),
-                                defaultFactory=FieldFactory('title_regex'),
-                                description=_(u"Only words matching this Regular Expression are used as tag. If empty all words are added as tag."))
 
 
     exif_fields = schema.List(
@@ -76,6 +62,10 @@ Example: Value is "Newton, Issac", regex = "(\w+), (\w+)", format = "{1} {0}" ->
             required=False,
         )
 
+    use_iptc = schema.Bool(title = _(u"Use IPTC"),
+                           defaultFactory=FieldFactory('use_iptc'),
+                           description=_(u"Select if tags based on iptc should be added."))
+
     iptc_fields = schema.List(
             title=_(u"IPTC Fields"),
             description=_(u"""List of the IPTC fields that are transformed into tags. You may specify a regular expression to cut out a portion of the IPTC value. Also you may specify a format string to shape the output of the exif value or the cut out portion."""),
@@ -86,6 +76,10 @@ Example: Value is "Newton, Issac", regex = "(\w+), (\w+)", format = "{1} {0}" ->
                 ),
             required=False,
         )
+
+    use_xmp = schema.Bool(title = _(u"Use XMP"),
+                           defaultFactory=FieldFactory('use_xmp'),
+                           description=_(u"Select if tags based on xmp should be added."))
 
     xmp_fields = schema.List(
             title=_(u"XMP Fields"),
@@ -110,6 +104,15 @@ Example: Value is "Newton, Issac", regex = "(\w+), (\w+)", format = "{1} {0}" ->
             required=False,
         )
 
+    use_title = schema.Bool(title = u"Use Title",
+                           defaultFactory=FieldFactory('use_title'),
+                           description=_(u"Select if tags based on title should be added. DANGEROUS THIS CAN FLOOD YOUR KEYWORDS! Only enable this option if you have thought twice. Be sure that the regular expression below is strict and correct."))
+
+    title_regex = schema.TextLine(title = _(u"Regular Expression for Title Tags"),
+                                defaultFactory=FieldFactory('title_regex'),
+                                description=_(u"Only words matching this Regular Expression are used as tag. If empty nathing is added as tag."),
+                                required=False,
+                                )
 
 
 class TaggingForm(AutoExtensibleForm, form.Form):
@@ -127,8 +130,8 @@ class TaggingForm(AutoExtensibleForm, form.Form):
     fields['xmp_fields'].widgetFactory = DataGridFieldFactory
     fields['ignored_tags'].widgetFactory = DataGridFieldFactory
 
-    label = _(u"Inqbus.tagging EXIF Config")
-    description = _(u"Here you can specify if and which exif information is tranlated into tags")
+    label = _(u"Inqbus.tagging Configuration")
+    description = _(u"Configure Filters for metadata tag generation here")
 
     @button.buttonAndHandler(u'Ok')
     def handleApply(self, action):

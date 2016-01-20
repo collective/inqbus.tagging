@@ -1,19 +1,45 @@
 Introduction
 ============
 
-This module allows automatic tagging for all content types and specially Images.
-It generates tags from titles and Image-Meta-Data like Exif, Xmp and IPTC.
+This module allows automatic tagging of multimedia content with a strong focus on images.
 
-It also helps to manage existing Tags based on different Configurations and
-provides Image-Previews in `folder_contents`-View.
+Inqbus.tagging processes metadata of the categories filename, EXIF, IPTC, XMP of any object uploaded into plone.
+The metadata then is filtered by configurable filters. For each metadata category there is a filter which can be switched on/off independently.
+
+The file name is filtered by a regular expression you are free to craft.
+
+EXIF, IPTC and XMP are filtered firstly by a positive list of tags for each category.
+
+For every tag in a filter can be defined a regular expression and a format string to cut and format anyway you like.
+Lets assume you have metadata tags with the structure "Asimov, Isaac; Bradley, Alex" you can transform them into the Plone tags
+"Isaac Asimov" and "Alex Bradley" easily.
+
+Since there are lots of possible tags available inqbus.tagging comes with tag import views for each
+metadata category. Each tag import views allow for opening an arbitrary file in Plone to inspect its metadata and to select and transfer
+metadata tag names into the tag configuration.
+
+Inqbus.tagging supports manual tagging of images by providing a preview image column in the `folder_contents`-View.
+Also inqbus.tagging brings lossless EXIF image auto rotation back to Plone.
+
+If you have changed your autotagging config you can use the "retag" Button in the `folder_contents`-View to rerun the
+auto tagging on certain objects.
+
+
+Stabilty
+========
+
+This code is work in progress crafted in after hours. It may not be save for production sites, but runs fine in our setup.
+We welcome anyone to improve the code.
+
 
 Requirements
 ============
 
 * Plone 5
 * z3c.forms
-* A browser with javascript support
-* jquery 1.4.3 or later
+* IPTCInfo
+* exifread
+* (only for auto rotation) jpegtran-cffi (libjpeg8, cython, cffi)
 
 Installation
 ============
@@ -25,29 +51,26 @@ Add inqbus.tagging to your buildout eggs.::
         inqbus.tagging
 
 
-Configuration
-=============
+Deinstallation
+==============
 
-Manage existing Tags
---------------------
+Go to Configuration -> Extensions. Select uninstall inqbus.tagging.
+Deinstallation purges all the configuration
 
-For managing existing tags you can use a modified version of `Products.PloneKeywordManager`.
 
-.. image:: docs/img/keywordmanager.png
 
-Here you can join tags used for the same content or delete not wanted tags.
+
+Using inqbus.tagging
+====================
+
 
 Configure Auto-Tagging
 ----------------------
 
-For adding automatically generated tags you have to configure `inqbus.tagging` using
-the `Inqbus Tagging Settings` in Site Setup.
+Go to Configuration -> inqbus.tagging Configuration:
 
 .. image:: docs/img/tagging_config.png
 
-Here you can decide which information and meta-information should be used for
-generating tags, which tags should be ignored and how meta-information should be
-converted.
 
 
 Select Tags by Tag Import
@@ -65,7 +88,17 @@ Select your tags and press ok. All selected tags are added to the list in
 `Inqbus Tagging Settings` and can be configured there.
 
 
-Expanded Folder_contents-View
+Manage existing Tags
+--------------------
+
+For managing existing tags you can use a modified version of `Products.PloneKeywordManager`.
+
+.. image:: docs/img/keywordmanager.png
+
+Here you can join tags used for the same content or delete not wanted tags.
+
+
+Extended Folder_contents-View
 =============================
 
 Image Preview
@@ -82,4 +115,19 @@ Retag
 To migrate existing objects you can use the `Retag`-Action in the `folder_contents`-View.
 
 
+Limitations
+===========
 
+Processing XMP is done by parsing the RDF:XML-Data structure directly utilizing LXML.
+Usually XMP is parsed by tools based on Adobe's XMP-Toolkit which fiddles a lot with the tag values to make them appear
+right. There seems to be no Python XMP-Lib out there which does not requires an image file name to process a file.
+Even in the underlying C++ Code there appears no good entry point for processing image data from a ZODB-Blob. So we
+decided to parse the XMP "by hand" and do without the Adobe corrections. So please be not disappointed if the XMP tags
+you have applied to your image by Photoshop 10 years ago may come out a bit askew.
+
+Background
+==========
+
+We take part in a small foto group in germany. Our site http://fotogruppe-altenstadt.de presents 20.000+ high
+quality images tagged by 2000+ keywords under CC license. Using Plone for a long time we like to give back our knowledge
+to the community.

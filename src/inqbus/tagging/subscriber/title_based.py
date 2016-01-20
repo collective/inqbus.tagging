@@ -17,12 +17,12 @@ def image_title_to_tag(context, event):
             regex = tagging_config.title_regex
             regex_compiled = re.compile(regex)
             name_tags = regex_compiled.findall(filename)
-        else:
-            filename = filename.replace(' ', '.').replace('_', '.').replace('/', '.')
-
-            name_tags = filename.split('.')
-
-            name_tags.pop(-1)
+        # else:
+        #     filename = filename.replace(' ', '.').replace('_', '.').replace('/', '.')
+        #
+        #     name_tags = filename.split('.')
+        #
+        #     name_tags.pop(-1)
 
         add_tags(context, tags_to_add=name_tags)
 
@@ -44,10 +44,10 @@ def object_title_to_tag(context):
             regex = tagging_config.title_regex
             regex_compiled = re.compile(regex)
             name_tags = regex_compiled.findall(title)
-    else:
-
-        title = title.replace(' ', '.').replace('_', '.').replace('/', '.')
-
-        name_tags = title.split('.')
+    # else:
+    #
+    #     title = title.replace(' ', '.').replace('_', '.').replace('/', '.')
+    #
+    #     name_tags = title.split('.')
 
     add_tags(context, tags_to_add=name_tags)
