@@ -3,5 +3,6 @@
     <dependencies>
         <dependency>profile-plone.app.dexterity:default</dependency>
         <dependency>profile-Products.PloneKeywordManager:default</dependency>
+        <dependency>profile-plone.app.contenttypes:default</dependency>
     </dependencies>
 </metadata>
