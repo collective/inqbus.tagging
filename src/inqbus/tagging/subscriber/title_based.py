@@ -40,6 +40,8 @@ def object_title_to_tag(context):
 
     tagging_config = get_tagging_config()
 
+    name_tags = []
+
     if tagging_config.title_regex:
             regex = tagging_config.title_regex
             regex_compiled = re.compile(regex)

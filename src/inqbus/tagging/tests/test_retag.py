@@ -65,6 +65,7 @@ class TestContentListings(unittest.TestCase):
         config = queryUtility(ITaggingConfig, 'TaggingConfig')
 
         config.use_title = True
+        config.title_regex = '(\w+)'
 
         view = getMultiAdapter(
             (self.portal, self.request),

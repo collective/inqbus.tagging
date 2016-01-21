@@ -34,7 +34,9 @@ class TaggingConfig(Persistent):
     use_exif = True
     use_iptc = True
     use_xmp = True
-    use_title = True
+    # use_title should be false as default because there could be lots of unwanted
+    # tags
+    use_title = False
     title_regex = u""
 
     def __init__(self):
