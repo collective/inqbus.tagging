@@ -106,3 +106,88 @@ class TestContentListings(unittest.TestCase):
         self.assertTrue(iptc[5] in subjects)
         # iptc[25 is a list
         self.assertTrue(iptc[25][0] in subjects)
+
+    def test_meta_tags_with_only_regex(self):
+        self.config.exif_fields = [{
+            'regex': u'(\w+)',
+            'field': u'Image Copyright',
+            'format': None
+        }]
+
+        self.portal.invokeFactory('Folder', 'test-folder', title="Test Title")
+
+        folder = self.portal['test-folder']
+
+        dirname, filename = os.path.split(os.path.abspath(__file__))
+
+        path = os.path.join(dirname, "test_images", "metadata-test-image-L.jpg")
+
+        folder.invokeFactory('Image', 'testimage', image=image_by_path(path))
+
+        image = folder['testimage']
+
+        meta = image_to_meta(image)
+
+        exif = meta['exif']
+
+        subjects = image.Subject()
+
+        self.assertFalse(exif['Image Copyright'].printable in subjects)
+        self.assertTrue('IPTC' in subjects)
+        self.assertFalse('Core' in subjects)
+
+    def test_meta_tags_with_only_format(self):
+        self.config.exif_fields = [{
+            'regex': None,
+            'field': u'Image Copyright',
+            'format': 'hello_{0}'
+        }]
+
+        self.portal.invokeFactory('Folder', 'test-folder', title="Test Title")
+
+        folder = self.portal['test-folder']
+
+        dirname, filename = os.path.split(os.path.abspath(__file__))
+
+        path = os.path.join(dirname, "test_images", "metadata-test-image-L.jpg")
+
+        folder.invokeFactory('Image', 'testimage', image=image_by_path(path))
+
+        image = folder['testimage']
+
+        meta = image_to_meta(image)
+
+        exif = meta['exif']
+
+        subjects = image.Subject()
+
+        self.assertFalse(exif['Image Copyright'].printable in subjects)
+        self.assertTrue('hello_' + exif['Image Copyright'].printable in subjects)
+
+    def test_meta_tags_with_regex_and_format(self):
+        self.config.exif_fields = [{
+            'regex': '(\w+) (\w+)',
+            'field': u'Image Copyright',
+            'format': 'hello_{1}_{0}'
+        }]
+
+        self.portal.invokeFactory('Folder', 'test-folder', title="Test Title")
+
+        folder = self.portal['test-folder']
+
+        dirname, filename = os.path.split(os.path.abspath(__file__))
+
+        path = os.path.join(dirname, "test_images", "metadata-test-image-L.jpg")
+
+        folder.invokeFactory('Image', 'testimage', image=image_by_path(path))
+
+        image = folder['testimage']
+
+        meta = image_to_meta(image)
+
+        exif = meta['exif']
+
+        subjects = image.Subject()
+
+        self.assertFalse(exif['Image Copyright'].printable in subjects)
+        self.assertTrue('hello_Core_IPTC' in subjects)
