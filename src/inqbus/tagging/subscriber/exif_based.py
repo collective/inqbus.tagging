@@ -97,32 +97,43 @@ def exif_to_orientation(context, event):
 
     if not (hasattr(context, 'image') and context.image):
         return
+
+    try:
+        from jpegtran import JPEGImage
+    except ImportError:
+        rotate_with_pillow(context)
+    else:
+        # use jpegtran to rotate
+        rotate_with_jpegtran(context)
+
+
+def rotate_with_jpegtran(context):
+    image = context.image
+    data = image.data
+
+    from jpegtran import JPEGImage
+
+    jpeg_image = JPEGImage(blob=data)
+
+    try:
+        image.data = jpeg_image.exif_autotransform().as_blob()
+    except Exception as e:
+        if 'Could not find EXIF orientation' in e.args:
+            pass
+        else:
+            raise
+    else:
+        context.reindexObject()
+
+
+def rotate_with_pillow(context):
+    # use Pillow to rotate
     image = context.image
     data = image.data
 
     io = StringIO(data)
     io.seek(0)
 
-    try:
-        from jpegtran import JPEGImage
-    except ImportError:
-        pass
-    else:
-        # use jpegtran to rotate
-        jpeg_image = JPEGImage(blob=data)
-
-        try:
-            image.data = jpeg_image.exif_autotransform().as_blob()
-        except Exception as e:
-            if 'Could not find EXIF orientation' in e.args:
-                pass
-            else:
-                raise
-        else:
-            context.reindexObject()
-            return
-
-    # use Pillow to rotate
     exif_tags = exifread.process_file(io)
     orientation = get_orientation(exif_tags)
 
