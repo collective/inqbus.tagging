@@ -17,7 +17,7 @@ from inqbus.tagging import logger
 
 from inqbus.tagging import MessageFactory as _
 
-class OwnFolderContentsView(FolderContentsView):
+class InqbusTaggingFolderContentsView(FolderContentsView):
 
     def __call__(self):
         site = getSite()

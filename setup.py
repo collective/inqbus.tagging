@@ -27,13 +27,12 @@ setup(name='inqbus.tagging',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'Pillow',
           # -*- Extra requirements: -*-
           'Products.PloneKeywordManager',
           'IPTCInfo',
           'exifread',
           'plone.autoform',
-          'cffi',
-          'jpegtran-cffi',
 #          'collective.z3cform.datagridfield'
       ],
       dependency_links=[
@@ -44,6 +43,10 @@ setup(name='inqbus.tagging',
             'plone.app.testing',
             'plone.app.robotframework[debug]',
         ],
+        'jpegtran': [
+            'cffi',
+            'jpegtran-cffi',
+        ]
         },
       entry_points="""
       # -*- Entry points: -*-

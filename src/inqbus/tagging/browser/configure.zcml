@@ -20,7 +20,7 @@
 
     <browser:page
         for="Products.CMFCore.interfaces._content.IFolderish"
-        class=".views.OwnFolderContentsView"
+        class=".views.InqbusTaggingFolderContentsView"
         name="folder_contents"
         template="templates/folder_contents.pt"
         permission="cmf.ListFolderContents"
@@ -30,7 +30,7 @@
     <browser:page
         name="image_html"
         for="Products.CMFCore.interfaces._content.IFolderish"
-        class=".views.OwnFolderContentsView"
+        class=".views.InqbusTaggingFolderContentsView"
         attribute="image_html"
         permission="zope2.View"
     />

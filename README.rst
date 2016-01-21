@@ -44,6 +44,8 @@ Requirements
 Installation
 ============
 
+.. TODO: inqbus.tagging[jpegtran] vs inqbus.tagging
+
 Add inqbus.tagging to your buildout eggs.::
 
     eggs=\
