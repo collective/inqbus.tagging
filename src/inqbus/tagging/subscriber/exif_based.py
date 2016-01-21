@@ -30,21 +30,33 @@ def get_tags(image_tags, tag_config):
         str_format = field_info[field]['format']
         value = field_value[field]
 
-        if regex:
-           match = re.search(regex, value.printable)
-           if match :
-                if str_format:
-                   tags.append(str_format.format(*match.groups()))
-                else:
-                   tags.append(match.group(0))
-           continue
+        if isinstance(value, list):
+            for subvalue in value:
+                tag = get_tag(subvalue, regex, str_format)
 
-        if str_format:
-            tags.append(str_format.format(value.printable))
+                tags.append(tag)
         else:
-            tags.append(value.printable)
+            tag = get_tag(value, regex, str_format)
+
+            tags.append(tag)
 
     return tags
+
+
+def get_tag(value, regex, str_format):
+    if hasattr(value, 'printable'):
+        value = value.printable
+    if regex:
+       match = re.search(regex, value)
+       if match and str_format:
+           return str_format.format(*match.groups())
+       else:
+           return match.group(0)
+
+    if str_format:
+        return str_format.format(value)
+    else:
+        return value
 
 
 def exif_to_tag(context, event):
@@ -98,11 +110,17 @@ def exif_to_orientation(context, event):
     else:
         # use jpegtran to rotate
         jpeg_image = JPEGImage(blob=data)
-        image.data = jpeg_image.exif_autotransform().as_blob()
 
-        context.reindexObject()
-
-        return
+        try:
+            image.data = jpeg_image.exif_autotransform().as_blob()
+        except Exception as e:
+            if 'Could not find EXIF orientation' in e.args:
+                pass
+            else:
+                raise
+        else:
+            context.reindexObject()
+            return
 
     # use Pillow to rotate
     exif_tags = exifread.process_file(io)

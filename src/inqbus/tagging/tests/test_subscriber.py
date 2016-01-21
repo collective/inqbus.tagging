@@ -18,7 +18,7 @@ from zope.lifecycleevent import modified
 from inqbus.tagging.testing import INQBUS_TAGGING_INTEGRATION_TESTING
 from inqbus.tagging.browser.actions import RetagAction, RetagActionView
 from inqbus.tagging.configuration.utilities import ITaggingConfig
-from inqbus.tagging.functions import get_tagging_config
+from inqbus.tagging.functions import get_tagging_config, image_to_meta
 from inqbus.tagging.tests.test_functions import image_by_path
 
 
@@ -44,7 +44,6 @@ class TestContentListings(unittest.TestCase):
         return authenticator.token()
 
     def test_title(self):
-
 
         self.portal.invokeFactory('Folder', 'test-folder', title="Test Title")
 
@@ -75,3 +74,35 @@ class TestContentListings(unittest.TestCase):
         self.assertTrue('Different' in subjects)
         self.assertTrue('Title' in subjects)
         self.assertTrue('Landscape_5' in subjects)
+
+    def test_meta_tags(self):
+        self.config.add_exif_tag('Image Copyright')
+        self.config.add_iptc_tag('5')
+        self.config.add_iptc_tag('25')
+
+        self.portal.invokeFactory('Folder', 'test-folder', title="Test Title")
+
+        folder = self.portal['test-folder']
+
+        dirname, filename = os.path.split(os.path.abspath(__file__))
+
+        path = os.path.join(dirname, "test_images", "metadata-test-image-L.jpg")
+
+        folder.invokeFactory('Image', 'testimage', image=image_by_path(path))
+
+        image = folder['testimage']
+
+        meta = image_to_meta(image)
+
+        exif = meta['exif']
+        iptc = meta['iptc'].data
+
+        subjects = image.Subject()
+
+        self.assertTrue(exif['Image Copyright'].printable in subjects)
+
+        self.assertFalse(exif['EXIF FlashPixVersion'].printable in subjects)
+
+        self.assertTrue(iptc[5] in subjects)
+        # iptc[25 is a list
+        self.assertTrue(iptc[25][0] in subjects)
