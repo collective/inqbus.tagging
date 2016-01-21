@@ -33,12 +33,12 @@ def get_tags(image_tags, tag_config):
         if isinstance(value, list):
             for subvalue in value:
                 tag = get_tag(subvalue, regex, str_format)
-
-                tags.append(tag)
+                if tag:
+                    tags.append(tag)
         else:
             tag = get_tag(value, regex, str_format)
-
-            tags.append(tag)
+            if tag:
+                tags.append(tag)
 
     return tags
 
@@ -47,11 +47,13 @@ def get_tag(value, regex, str_format):
     if hasattr(value, 'printable'):
         value = value.printable
     if regex:
-       match = re.search(regex, value)
-       if match and str_format:
-           return str_format.format(*match.groups())
-       else:
-           return match.group(0)
+        match = re.search(regex, value)
+        if match and str_format:
+            return str_format.format(*match.groups())
+        elif match:
+            return match.group(0)
+        else:
+            return
 
     if str_format:
         return str_format.format(value)

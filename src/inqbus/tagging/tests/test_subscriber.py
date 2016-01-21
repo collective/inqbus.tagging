@@ -191,3 +191,57 @@ class TestContentListings(unittest.TestCase):
 
         self.assertFalse(exif['Image Copyright'].printable in subjects)
         self.assertTrue('hello_Core_IPTC' in subjects)
+
+    def test_regex_no_match(self):
+        self.config.exif_fields = [{
+            'regex': '(\w+) (\w+)',
+            'field': u'Image Copyright',
+            'format': 'hello_{1}_{0}'
+        }]
+
+        self.portal.invokeFactory('Folder', 'test-folder', title="Test Title")
+
+        folder = self.portal['test-folder']
+
+        dirname, filename = os.path.split(os.path.abspath(__file__))
+
+        path = os.path.join(dirname, "test_images", "small_IMG_5097.jpg")
+
+        folder.invokeFactory('Image', 'testimage', image=image_by_path(path))
+
+        image = folder['testimage']
+
+        meta = image_to_meta(image)
+
+        exif = meta['exif']
+
+        subjects = image.Subject()
+
+        self.assertFalse(exif['Image Copyright'].printable in subjects)
+        self.assertTrue(subjects)
+
+    def test_xmp_and_ignored_list(self):
+        self.config.xmp_fields = [{
+            'regex': '',
+            'field': u'{http://purl.org/dc/elements/1.1/}subject',
+            'format': ''
+        }]
+        self.config.ignored_tags = [{'tag': 'Garde'}]
+
+        self.portal.invokeFactory('Folder', 'test-folder', title="Test Title")
+
+        folder = self.portal['test-folder']
+
+        dirname, filename = os.path.split(os.path.abspath(__file__))
+
+        path = os.path.join(dirname, "test_images", "small_IMG_5097.jpg")
+
+        folder.invokeFactory('Image', 'testimage', image=image_by_path(path))
+
+        image = folder['testimage']
+
+        subjects = image.Subject()
+
+        self.assertTrue('Inthronisation' in subjects)
+        self.assertTrue('Hohenfurch' in subjects)
+        self.assertFalse('Garde' in subjects)
