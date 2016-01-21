@@ -65,12 +65,23 @@ class TestContentListings(unittest.TestCase):
         config = queryUtility(ITaggingConfig, 'TaggingConfig')
 
         config.use_title = True
-        config.title_regex = '(\w+)'
 
         view = getMultiAdapter(
             (self.portal, self.request),
             name='fc-retag'
         )
+        _result = view()
+
+        self.assertFalse(view.errors)
+
+        subjects = self.folder.Subject()
+
+        # nor regex was set and no tag will be generated without regex
+        self.assertTrue('Test' not in subjects)
+        self.assertTrue('Folder' not in subjects)
+
+        config.title_regex = '(\w+)'
+
         _result = view()
 
         self.assertFalse(view.errors)
