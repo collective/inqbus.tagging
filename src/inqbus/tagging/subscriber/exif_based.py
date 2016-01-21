@@ -91,42 +91,49 @@ def exif_to_orientation(context, event):
     io = StringIO(data)
     io.seek(0)
 
-    from jpegtran import JPEGImage
+    try:
+        from jpegtran import JPEGImage
+    except ImportError:
+        pass
+    else:
+        # use jpegtran to rotate
+        jpeg_image = JPEGImage(blob=data)
+        image.data = jpeg_image.exif_autotransform().as_blob()
 
-    jpeg_image = JPEGImage(blob=data)
-    image.data = jpeg_image.exif_autotransform().as_blob()
+        context.reindexObject()
 
-    return
+        return
 
-#    exif_tags = exifread.process_file(io)
-#    orientation = get_orientation(exif_tags)
+    # use Pillow to rotate
+    exif_tags = exifread.process_file(io)
+    orientation = get_orientation(exif_tags)
 
-    # io.seek(0)
-    #
-    # pil_image = PIL.Image.open(io)
-    # converted_img_io = StringIO()
-    #
-    # if orientation:
-    #     rotation = ORIENTATIONS[orientation][1]
-    #     if rotation:
-    #         mirror = ORIENTATIONS[orientation][2]
-    #
-    #         rotated_image = pil_image.rotate(360-rotation,
-    #                                          resample=PIL.Image.BICUBIC,
-    #                                          expand=True)
-    #         if mirror == HORIZONTAL_MIRROR:
-    #             rotated_image = rotated_image.transpose(PIL.Image.FLIP_LEFT_RIGHT)
-    #         elif mirror == VERTICAL_MIRROR:
-    #             rotated_image = rotated_image.transpose(PIL.Image.FLIP_TOP_BOTTOM)
-    #
-    #         rotated_image.save(converted_img_io, 'JPEG', quality=100)
-    #
-    #         context.image.data = converted_img_io.getvalue()
-    #
-    #         context.reindexObject()
-    #
-    # converted_img_io.close()
-    # io.close()
+    io.seek(0)
+
+    pil_image = PIL.Image.open(io)
+    converted_img_io = StringIO()
+
+    if orientation:
+        rotation = ORIENTATIONS[orientation][1]
+        if rotation:
+            mirror = ORIENTATIONS[orientation][2]
+
+            rotated_image = pil_image.rotate(360-rotation,
+                                             resample=PIL.Image.BICUBIC,
+                                             expand=True)
+            if mirror == HORIZONTAL_MIRROR:
+                rotated_image = rotated_image.transpose(PIL.Image.FLIP_LEFT_RIGHT)
+            elif mirror == VERTICAL_MIRROR:
+                rotated_image = rotated_image.transpose(PIL.Image.FLIP_TOP_BOTTOM)
+
+            rotated_image.save(converted_img_io, 'JPEG', quality=100)
+
+            image.data = converted_img_io.getvalue()
+
+            context.reindexObject()
+
+    converted_img_io.close()
+    io.close()
 
 
 def get_orientation(tags):
