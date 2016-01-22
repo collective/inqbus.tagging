@@ -14,7 +14,7 @@ from inqbus.tagging.tests.test_functions import image_by_path
 from inqbus.tagging.subscriber.exif_based import rotate_with_jpegtran, rotate_with_pillow
 
 
-class TestContentListings(unittest.TestCase):
+class TestRotation(unittest.TestCase):
 
     layer = INQBUS_TAGGING_INTEGRATION_TESTING
 

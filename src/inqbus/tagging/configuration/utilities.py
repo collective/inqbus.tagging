@@ -94,7 +94,10 @@ class TaggingConfig(Persistent):
 
     @test_image.setter
     def test_image(self, value):
-        self._test_image = value.UID()
+        if hasattr(value, 'UID'):
+            self._test_image = value.UID()
+        else:
+            self._test_image = ''
         self._p_changed = True
 
     def add_exif_tag(self, tag):

@@ -3,11 +3,14 @@ try:
 except ImportError:
     import unittest
 
+import os
+
 # zope imports
 from plone.app.testing import TEST_USER_ID, setRoles
 from zope.component import getMultiAdapter
 # local imports
 from inqbus.tagging.testing import INQBUS_TAGGING_INTEGRATION_TESTING
+from inqbus.tagging.tests.test_functions import image_by_path
 
 
 class TestContentListings(unittest.TestCase):
@@ -43,3 +46,30 @@ class TestContentListings(unittest.TestCase):
         results = view()
         self.assertTrue('tags' in results)
         self.assertTrue('preview' in results)
+
+    def test_get_image(self):
+        view = view = getMultiAdapter(
+            (self.folder, self.request),
+            name='folder_contents'
+        )
+
+        result = view.image_html()
+        self.assertFalse('img' in result)
+
+        dirname, filename = os.path.split(os.path.abspath(__file__))
+
+        path = os.path.join(dirname, "test_images", "small_IMG_5097.jpg")
+
+        self.folder.invokeFactory('Image', 'testimage', image=image_by_path(path))
+
+        image = self.folder['testimage']
+
+        self.request.form.update({'uid': image.UID()})
+
+        view = view = getMultiAdapter(
+            (self.folder, self.request),
+            name='folder_contents'
+        )
+
+        result = view.image_html()
+        self.assertTrue('img' in result)

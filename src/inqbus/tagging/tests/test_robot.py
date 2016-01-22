@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from inqbus.tagging.testing import INQBUS_TAGGING_ACCEPTANCE_TESTING  # noqa
+import os
+import unittest
+
+import robotsuite
 from plone.app.testing import ROBOT_TEST_LEVEL
 from plone.testing import layered
 
-import os
-import robotsuite
-import unittest
+from inqbus.tagging.testing import INQBUS_TAGGING_ACCEPTANCE_TESTING  # noqa
 
 
 def test_suite():

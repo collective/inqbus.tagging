@@ -81,8 +81,10 @@ class InqbusTaggingFolderContentsView(FolderContentsView):
     def image_html(self):
 
         image_uid = self.request.get('uid')
-
-        image = api.content.get(UID=image_uid)
+        if image_uid:
+            image = api.content.get(UID=image_uid)
+        else:
+            image = None
         if image:
             html = '<img src=%s />' % (
                 image.absolute_url()+"/@@images/image/mini")

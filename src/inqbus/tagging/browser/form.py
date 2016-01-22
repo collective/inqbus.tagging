@@ -190,6 +190,7 @@ class TagImportExifEditForm(AutoExtensibleForm, form.EditForm):
         super(TagImportExifEditForm, self).updateFields()
         config_store = get_tagging_config()
         test_image = config_store.test_image
+
         if test_image and test_image.portal_type and test_image.portal_type == 'Image':
             exif = image_to_meta(test_image)['exif']
             exif_keys = exif.keys()
@@ -322,7 +323,7 @@ class TagImportXMPEditForm(TagImportExifEditForm):
 
         if test_image and test_image.portal_type and test_image.portal_type == 'Image':
 
-            xmp_data = xmp.parse(test_image.image.data)
+            xmp_data = image_to_meta(test_image)['xmp']
 
             xmp_keys = xmp_data.keys()
             xmp_keys.sort()

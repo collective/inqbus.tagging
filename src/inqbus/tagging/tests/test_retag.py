@@ -6,18 +6,16 @@ except ImportError:
 # zope imports
 from Products.CMFPlone import PloneMessageFactory as _
 from plone.app.testing import TEST_USER_ID, setRoles
+from zope.component import getMultiAdapter
 from zope.component import queryUtility
 from zope.i18n import translate
-from zope.component import getMultiAdapter
-
-
 # local imports
 from inqbus.tagging.testing import INQBUS_TAGGING_INTEGRATION_TESTING
-from inqbus.tagging.browser.actions import RetagAction, RetagActionView
+from inqbus.tagging.browser.actions import RetagAction
 from inqbus.tagging.configuration.utilities import ITaggingConfig
 
 
-class TestContentListings(unittest.TestCase):
+class TestRetag(unittest.TestCase):
 
     layer = INQBUS_TAGGING_INTEGRATION_TESTING
 

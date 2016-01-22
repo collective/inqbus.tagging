@@ -6,23 +6,15 @@ except ImportError:
 import os
 
 # zope imports
-from Products.CMFPlone import PloneMessageFactory as _
 from plone.app.testing import TEST_USER_ID, setRoles
-from zope.component import queryUtility
-from zope.i18n import translate
 from zope.component import getMultiAdapter
-from zope.lifecycleevent import modified
-
-
 # local imports
 from inqbus.tagging.testing import INQBUS_TAGGING_INTEGRATION_TESTING
-from inqbus.tagging.browser.actions import RetagAction, RetagActionView
-from inqbus.tagging.configuration.utilities import ITaggingConfig
 from inqbus.tagging.functions import get_tagging_config, image_to_meta
 from inqbus.tagging.tests.test_functions import image_by_path
 
 
-class TestContentListings(unittest.TestCase):
+class TestSubscriber(unittest.TestCase):
 
     layer = INQBUS_TAGGING_INTEGRATION_TESTING
 
