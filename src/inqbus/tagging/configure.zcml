@@ -25,7 +25,7 @@
       name="default"
       title="Inqbus Tagging"
       directory="profiles/default"
-      description="Extension profile for Inqbus Tagging"
+      description="Automatic tagging for images and other content types"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 

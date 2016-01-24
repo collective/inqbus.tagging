@@ -1,3 +1,4 @@
+from Products.CMFCore.utils import getToolByName
 import exifread
 from iptcinfo import IPTCInfo
 
@@ -94,5 +95,13 @@ def add_tags(obj, tags_to_add=[]):
     obj.reindexObject()
 
 
-
-
+def get_all_keywords(context):
+    """
+    Get the list of current keywords. TODO: Caching, use sets or dict
+    :param context:
+    :return:
+    """
+    catalog = getToolByName(context, 'portal_catalog')
+    keywords = list(catalog.uniqueValuesFor('Subject'))
+    keywords.sort(key=lambda x:x.lower())
+    return keywords

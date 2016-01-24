@@ -25,9 +25,9 @@ class TestSubscriber(unittest.TestCase):
 
         self.config = get_tagging_config()
 
-        self.config.use_title = True
+        self.config.scan_title = True
 
-        self.config.title_regex = '(\w+)'
+        self.config.scan_title_regex = '(\w+)'
 
     def _get_token(self, context):
         authenticator = getMultiAdapter(

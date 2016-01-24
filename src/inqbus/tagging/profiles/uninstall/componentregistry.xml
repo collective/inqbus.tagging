@@ -6,6 +6,7 @@
         factory="inqbus.tagging.configuration.utilities.TaggingConfig"
         name="TaggingConfig"
         remove="True"
+        purge="True"
         />
     </utilities>
 </componentregistry>

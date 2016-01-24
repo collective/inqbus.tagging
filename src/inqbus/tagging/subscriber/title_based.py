@@ -1,55 +1,39 @@
-from inqbus.tagging.functions import add_tags, get_tagging_config
-
-import re
+from inqbus.tagging.functions import add_tags, get_tagging_config, get_all_keywords
 
 
-def image_title_to_tag(context, event):
-    tagging_config = get_tagging_config()
-    if tagging_config.use_title:
-        if hasattr(context, 'image') and context.image:
-            image = context.image
-        else:
-            return
-
-        filename = image.filename
-
-        if tagging_config.title_regex:
-            regex = tagging_config.title_regex
-            regex_compiled = re.compile(regex)
-            name_tags = regex_compiled.findall(filename)
-        # else:
-        #     filename = filename.replace(' ', '.').replace('_', '.').replace('/', '.')
-        #
-        #     name_tags = filename.split('.')
-        #
-        #     name_tags.pop(-1)
-
-        add_tags(context, tags_to_add=name_tags)
-
-
-def title_to_tag(event):
-    tagging_config = get_tagging_config()
-    if tagging_config.use_title:
-
-        context = event.object
-        object_title_to_tag(context)
-
-
-def object_title_to_tag(context):
-    title = context.title
-
+def title_to_tag(context, event):
+    """
+    Find keywords from the title of a content object. According to the configuration keywords may be added only, if they
+    already exist, or new keywords may be generated from the title.
+    :param context: The content object
+    :return: Nothing
+    """
+    # get the tagging configuration
     tagging_config = get_tagging_config()
 
-    name_tags = []
+    # Check if the title has to used at all. If not do nothing
+    if tagging_config.scan_title or tagging_config.new_tags_from_title:
+        # get the title
+        title = context.title
 
-    if tagging_config.title_regex:
-            regex = tagging_config.title_regex
-            regex_compiled = re.compile(regex)
-            name_tags = regex_compiled.findall(title)
-    # else:
-    #
-    #     title = title.replace(' ', '.').replace('_', '.').replace('/', '.')
-    #
-    #     name_tags = title.split('.')
+        # check if the title should be scanned and if a regex for scanning is provided
+        if tagging_config.scan_title and tagging_config.scan_title_regex:
+            # do the scanning
+            title_tags = tagging_config.scan_title_regex_compiled.findall(title)
+            # get a list a already existing keyowrds. TODO Optimization (caching, lower case matching, use sets or dicts)
+            existing_keywords = get_all_keywords(context)
+            # match the keywords to the exiting ones
+            for tag in title_tags:
+                if tag in existing_keywords:
+                    # add the matching keywords
+                    add_tags(context, tags_to_add=[tag])
 
-    add_tags(context, tags_to_add=name_tags)
+        # check if the title should be scanned for new keywords and if a regex for the scanning is provided
+        if tagging_config.new_tags_from_title and tagging_config.new_tags_from_title_regex:
+            # do the scanning
+            new_title_tags = tagging_config.new_tags_from_title_regex_compiled.findall(title)
+            # TODO Optimization (caching, lower case matching, use sets or dicts)
+            # add the keywords
+            add_tags(context, tags_to_add=new_title_tags)
+
+

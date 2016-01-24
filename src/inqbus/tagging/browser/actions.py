@@ -12,8 +12,7 @@ from zope.interface import implementer
 from inqbus.tagging.functions import get_tagging_config
 
 from inqbus.tagging.subscriber.exif_based import exif_to_tag
-from inqbus.tagging.subscriber.title_based import object_title_to_tag, \
-    image_title_to_tag
+from inqbus.tagging.subscriber.title_based import title_to_tag
 
 
 @implementer(IStructureAction)
@@ -70,17 +69,16 @@ class RetagActionView(ContentsBaseAction):
             sp = transaction.savepoint(optimistic=True)
 
             try:
-                if config.use_title:
-                    object_title_to_tag(obj)
+#                if config.use_title:
+#                    object_title_to_tag(obj)
                 if config.use_exif:
                     exif_to_tag(obj, None)
-                if config.use_title:
-                    image_title_to_tag(obj, None)
+                title_to_tag(obj, None)
             except ConflictError:
                 raise
             except Exception:
                 sp.rollback()
-                self.errors.append(_('Error retaging ${title}', mapping={
+                self.errors.append(_('Error retagging ${title}', mapping={
                     'title': title}))
 
         return self.message(missing)

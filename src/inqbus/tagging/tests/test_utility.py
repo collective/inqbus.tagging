@@ -35,9 +35,10 @@ class TestConfiguration(unittest.TestCase):
         self.assertIsInstance(utility.use_exif, types.BooleanType)
         self.assertIsInstance(utility.use_iptc, types.BooleanType)
         self.assertIsInstance(utility.use_xmp, types.BooleanType)
-        self.assertIsInstance(utility.use_title, types.BooleanType)
+        self.assertIsInstance(utility.scan_title, types.BooleanType)
 
-        self.assertIsInstance(utility.title_regex, types.StringTypes)
+        self.assertIsInstance(utility._scan_title_regex, types.StringTypes)
+        self.assertIsInstance(utility._new_tags_from_title_regex, types.StringTypes)
 
         self.assertIsInstance(utility.exif_fields, types.ListType)
         self.assertIsInstance(utility.iptc_fields, types.ListType)
@@ -50,7 +51,7 @@ class TestConfiguration(unittest.TestCase):
         utility = queryUtility(ITaggingConfig, 'TaggingConfig')
         self.assertTrue(utility.use_exif)
         self.assertTrue(utility.use_iptc)
-        self.assertFalse(utility.use_title)
+        self.assertFalse(utility.scan_title)
         self.assertTrue(utility.use_xmp)
 
         self.assertEqual(utility.exif_fields, [])
@@ -58,7 +59,8 @@ class TestConfiguration(unittest.TestCase):
         self.assertEqual(utility.iptc_fields, [])
         self.assertEqual(utility.xmp_fields, [])
 
-        self.assertEqual(utility.title_regex, u"")
+        self.assertEqual(utility._scan_title_regex, u"")
+        self.assertEqual(utility._new_tags_from_title_regex, u"")
 
     def test_add_methods(self):
         utility = queryUtility(ITaggingConfig, 'TaggingConfig')

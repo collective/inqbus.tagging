@@ -21,12 +21,15 @@
     <subscriber
     for="plone.app.contenttypes.content.Image
          zope.lifecycleevent.IObjectCreatedEvent"
-    handler=".title_based.image_title_to_tag"
-    />
-
-    <subscriber
-    for="zope.lifecycleevent.IObjectCreatedEvent"
     handler=".title_based.title_to_tag"
     />
 
+<!-- Such a subscriber has to be specific to a content type. If not it will be called in addition to
+   each call of a specific one like the one for the images
+
+   <subscriber
+    for="zope.lifecycleevent.IObjectCreatedEvent"
+    handler=".title_based.title_to_tag"
+    />
+-->
 </configure>

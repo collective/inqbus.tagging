@@ -104,13 +104,24 @@ Example: Value is "Newton, Issac", regex = "(\w+), (\w+)", format = "{1} {0}" ->
             required=False,
         )
 
-    use_title = schema.Bool(title = u"Use Title",
-                           defaultFactory=FieldFactory('use_title'),
-                           description=_(u"Select if tags based on title should be added. DANGEROUS THIS CAN FLOOD YOUR KEYWORDS! Only enable this option if you have thought twice. Be sure that the regular expression below is strict and correct."))
+    scan_title = schema.Bool(title = u"Match title tags",
+                           defaultFactory=FieldFactory('scan_title'),
+                           description=_(u"If selected: The title will be scanned utilizing the regex below to find keywords. The keywords found will then be matched with the list of already existing keywords. If matched the content object will be tagged with the matching keywords."))
 
-    title_regex = schema.TextLine(title = _(u"Regular Expression for Title Tags"),
-                                defaultFactory=FieldFactory('title_regex'),
-                                description=_(u"Only words matching this Regular Expression are used as tag. If empty nathing is added as tag."),
+    scan_title_regex = schema.TextLine(title = _(u"Regular expression for matching title tags"),
+                                defaultFactory=FieldFactory('scan_title_regex'),
+                                description=_(u"Specify a regex to break the title into keywords. Each keyword then is produced further."),
+                                required=False,
+                                )
+
+    new_tags_from_title = schema.Bool(title = u"New tags from title",
+                           defaultFactory=FieldFactory('new_tags_from_title'),
+                           description=_(u"We recommended strongly to leave this choice disabled: If enabled each item found by the regex will produce a (new) keyword. This may flood your Plone with so many keywords that you may not get rid of them easily. But for a particular setup this choice may be handy."),
+                           default= True)
+
+    new_tags_from_title_regex = schema.TextLine(title = _(u"Regular expression for creating new tags from title"),
+                                defaultFactory=FieldFactory('new_tags_from_title_regex'),
+                                description=_(u"Specify a regex to break the title into keywords. Each keyword then is produced further."),
                                 required=False,
                                 )
 
@@ -131,7 +142,7 @@ class TaggingForm(AutoExtensibleForm, form.Form):
     fields['ignored_tags'].widgetFactory = DataGridFieldFactory
 
     label = _(u"Inqbus.tagging Configuration")
-    description = _(u"Configure Filters for metadata tag generation here")
+    description = _(u"Configure Filters for metadata tag generation here. ")
 
     @button.buttonAndHandler(u'Ok')
     def handleApply(self, action):

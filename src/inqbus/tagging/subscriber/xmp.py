@@ -1,5 +1,5 @@
 import lxml.etree as ET
-import re
+import time
 
 
 def searchXMLContent(image_data) :
@@ -9,19 +9,21 @@ def searchXMLContent(image_data) :
     @return: RDF data as a string
     @rtype: string
     """
-    rdfpat = r"(?sm)^.*(<rdf:RDF.*</rdf:RDF>)"
-    r_rdf = re.compile(rdfpat)
-    q = r_rdf.search(image_data)
-    if q:
-        return q.group(1)
-    return ""
-
+    # This was the old approach but it is 2 orders of magnitude slower that the current.
+    # rdfpat = r"(?sm)^.*(<rdf:RDF.*</rdf:RDF>)"
+    # r_rdf = re.compile(rdfpat)
+    # q = r_rdf.search(image_data)
+    # if q:
+    #     return q.group(1)
+    # return ""
+    start = image_data.find('<rdf:RDF')
+    stop = image_data.find('</rdf:RDF>', start)
+    res = image_data[start: stop+10]
+    return res
 
 
 def parse(image_data):
 
-#    image_data = open("/home/volker/Downloads/view").read()
-#    image_data = open("/picture_store/bilder/2015/2015_01_10_intronisationsfeier_FCH/very_best/small/small_IMG_5097.jpg").read()
 
     xml = searchXMLContent(image_data)
     if not xml:
