@@ -11,7 +11,7 @@ from zope.i18n import translate
 from zope.interface import implementer
 from inqbus.tagging.functions import get_tagging_config
 
-from inqbus.tagging.subscriber.exif_based import exif_to_tag
+from inqbus.tagging.subscriber.exif_based import meta_to_tag
 from inqbus.tagging.subscriber.title_based import title_to_tag
 
 
@@ -69,10 +69,7 @@ class RetagActionView(ContentsBaseAction):
             sp = transaction.savepoint(optimistic=True)
 
             try:
-#                if config.use_title:
-#                    object_title_to_tag(obj)
-                if config.use_exif:
-                    exif_to_tag(obj, None)
+                meta_to_tag(obj, None)
                 title_to_tag(obj, None)
             except ConflictError:
                 raise

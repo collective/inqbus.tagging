@@ -25,7 +25,7 @@ class TestRotation(unittest.TestCase):
 
         self.config = get_tagging_config()
 
-        self.config.use_title = True
+        self.config.new_tags_from_title = True
 
         self.config.title_regex = '(\w+)'
 

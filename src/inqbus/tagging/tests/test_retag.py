@@ -24,9 +24,9 @@ class TestRetag(unittest.TestCase):
         self.request = self.layer['request']
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
 
-        self.portal.invokeFactory('Folder', 'test-folder')
+        self.portal.invokeFactory('Image', 'test-image')
 
-        self.folder = self.portal['test-folder']
+        self.image = self.portal['test-image']
 
     def _get_token(self, context):
         authenticator = getMultiAdapter(
@@ -36,7 +36,7 @@ class TestRetag(unittest.TestCase):
 
     def test_action(self):
 
-        options = RetagAction(self.folder, self.request).get_options()
+        options = RetagAction(self.image, self.request).get_options()
 
         self.assertTrue('title' in options)
         self.assertTrue(options['title'] == translate(_('Retag'),
@@ -49,20 +49,23 @@ class TestRetag(unittest.TestCase):
         self.assertTrue('form' in options)
 
     def test_view(self):
+        config = queryUtility(ITaggingConfig, 'TaggingConfig')
+        config.new_tags_from_title = False
+        config.scan_title = False
+
         self.request["REQUEST_METHOD"] = "POST"
-        self.request.form.update({'UID_test': self.folder.UID(),
+        self.request.form.update({'UID_test': self.image.UID(),
                                   '_authenticator': self._get_token(self.portal)})
 
-        self.folder.title = 'Test Folder'
+        self.image.title = 'Test Image'
 
-        subjects = self.folder.Subject()
+        subjects = self.image.Subject()
 
         self.assertTrue('Test' not in subjects)
-        self.assertTrue('Folder' not in subjects)
+        self.assertTrue('Image' not in subjects)
 
-        config = queryUtility(ITaggingConfig, 'TaggingConfig')
-
-        config.use_title = True
+        config.new_tags_from_title = True
+        config.scan_title = True
 
         view = getMultiAdapter(
             (self.portal, self.request),
@@ -72,19 +75,21 @@ class TestRetag(unittest.TestCase):
 
         self.assertFalse(view.errors)
 
-        subjects = self.folder.Subject()
+        subjects = self.image.Subject()
 
         # nor regex was set and no tag will be generated without regex
         self.assertTrue('Test' not in subjects)
-        self.assertTrue('Folder' not in subjects)
+        self.assertTrue('Image' not in subjects)
 
-        config.title_regex = '(\w+)'
+        config.scan_title_regex = '(\w+)'
 
         _result = view()
 
         self.assertFalse(view.errors)
 
-        subjects = self.folder.Subject()
+        subjects = self.image.Subject()
+
+        # TODO: Test if fails when problem with portal_catalog is solved
 
         self.assertTrue('Test' in subjects)
         self.assertTrue('Folder' in subjects)

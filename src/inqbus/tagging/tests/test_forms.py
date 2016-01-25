@@ -128,8 +128,6 @@ class TestForms(unittest.TestCase):
         self.assertTrue('Use XMP' in self.browser.contents)
         self.assertTrue('XMP Fields' in self.browser.contents)
         self.assertTrue('Ignored Title Tags' in self.browser.contents)
-        self.assertTrue('Use Title' in self.browser.contents)
-        self.assertTrue('Regular Expression for Title Tags' in self.browser.contents)
 
     def test_keyword_manager(self):
         # set some tags to make sure buttons are available in view

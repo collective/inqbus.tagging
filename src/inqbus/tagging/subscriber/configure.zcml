@@ -10,7 +10,7 @@
     <subscriber
     for="plone.app.contenttypes.content.Image
          zope.lifecycleevent.IObjectCreatedEvent"
-    handler=".exif_based.exif_to_tag"
+    handler=".exif_based.meta_to_tag"
     />
     <subscriber
     for="plone.app.contenttypes.content.Image

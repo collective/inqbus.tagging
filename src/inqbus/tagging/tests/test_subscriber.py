@@ -37,9 +37,9 @@ class TestSubscriber(unittest.TestCase):
 
     def test_title(self):
 
-        self.portal.invokeFactory('Folder', 'test-folder', title="Test Title")
+        self.portal.invokeFactory('Image', 'test-image', title="Test Title")
 
-        folder = self.portal['test-folder']
+        folder = self.portal['test-image']
 
         subjects = folder.Subject()
 

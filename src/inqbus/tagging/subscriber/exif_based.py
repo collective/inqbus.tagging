@@ -61,7 +61,7 @@ def get_tag(value, regex, str_format):
         return value
 
 
-def exif_to_tag(context, event):
+def meta_to_tag(context, event):
 
     tagging_config = get_tagging_config()
 
