@@ -1,6 +1,8 @@
 from Products.CMFCore.utils import getToolByName
 import exifread
 from iptcinfo import IPTCInfo
+from zope.component.hooks import getSite
+
 
 from StringIO import StringIO
 
@@ -101,7 +103,9 @@ def get_all_keywords(context):
     :param context:
     :return:
     """
-    catalog = getToolByName(context, 'portal_catalog')
+    # does not work with context in test, but with site
+    catalog = getToolByName(getSite(), 'portal_catalog')
+    # catalog = getToolByName(context, 'portal_catalog')
     keywords = list(catalog.uniqueValuesFor('Subject'))
     keywords.sort(key=lambda x:x.lower())
     return keywords

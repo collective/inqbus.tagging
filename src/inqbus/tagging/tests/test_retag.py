@@ -9,6 +9,7 @@ from plone.app.testing import TEST_USER_ID, setRoles
 from zope.component import getMultiAdapter
 from zope.component import queryUtility
 from zope.i18n import translate
+import transaction
 # local imports
 from inqbus.tagging.testing import INQBUS_TAGGING_INTEGRATION_TESTING
 from inqbus.tagging.browser.actions import RetagAction
@@ -77,11 +78,11 @@ class TestRetag(unittest.TestCase):
 
         subjects = self.image.Subject()
 
-        # nor regex was set and no tag will be generated without regex
+        # no regex was set and no tag will be generated without regex
         self.assertTrue('Test' not in subjects)
         self.assertTrue('Image' not in subjects)
 
-        config.scan_title_regex = '(\w+)'
+        config.new_tags_from_title_regex = '(\w+)'
 
         _result = view()
 
@@ -89,7 +90,5 @@ class TestRetag(unittest.TestCase):
 
         subjects = self.image.Subject()
 
-        # TODO: Test if fails when problem with portal_catalog is solved
-
         self.assertTrue('Test' in subjects)
-        self.assertTrue('Folder' in subjects)
+        self.assertTrue('Image' in subjects)

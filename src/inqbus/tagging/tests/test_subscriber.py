@@ -8,6 +8,7 @@ import os
 # zope imports
 from plone.app.testing import TEST_USER_ID, setRoles
 from zope.component import getMultiAdapter
+import transaction
 # local imports
 from inqbus.tagging.testing import INQBUS_TAGGING_INTEGRATION_TESTING
 from inqbus.tagging.functions import get_tagging_config, image_to_meta
@@ -26,8 +27,10 @@ class TestSubscriber(unittest.TestCase):
         self.config = get_tagging_config()
 
         self.config.scan_title = True
+        self.config.new_tags_from_title = True
 
         self.config.scan_title_regex = '(\w+)'
+        self.config.new_tags_from_title_regex = '(\w+)'
 
     def _get_token(self, context):
         authenticator = getMultiAdapter(
@@ -65,7 +68,7 @@ class TestSubscriber(unittest.TestCase):
 
         self.assertTrue('Different' in subjects)
         self.assertTrue('Title' in subjects)
-        self.assertTrue('Landscape_5' in subjects)
+        self.assertFalse('Landscape_5' in subjects)
 
     def test_meta_tags(self):
         self.config.add_exif_tag('Image Copyright')
