@@ -4,7 +4,7 @@ except ImportError:
     import unittest
 
 # zope imports
-from Products.CMFPlone import PloneMessageFactory as _
+from inqbus.tagging import MessageFactory as _
 from plone.app.testing import TEST_USER_ID, setRoles
 from zope.component import getMultiAdapter
 from zope.component import queryUtility

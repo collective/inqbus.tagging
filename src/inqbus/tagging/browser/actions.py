@@ -2,7 +2,7 @@
 import transaction
 from Acquisition import aq_inner
 from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone import PloneMessageFactory as _
+from inqbus.tagging import MessageFactory as _
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from ZODB.POSException import ConflictError
 from plone.app.content.browser.contents import ContentsBaseAction

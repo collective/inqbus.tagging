@@ -104,7 +104,7 @@ Example: Value is "Newton, Issac", regex = "(\w+), (\w+)", format = "{1} {0}" ->
             required=False,
         )
 
-    scan_title = schema.Bool(title = u"Match title tags",
+    scan_title = schema.Bool(title = _(u"Match title tags"),
                            defaultFactory=FieldFactory('scan_title'),
                            description=_(u"If selected: The title will be scanned utilizing the regex below to find keywords. The keywords found will then be matched with the list of already existing keywords. If matched the content object will be tagged with the matching keywords."))
 
@@ -114,7 +114,7 @@ Example: Value is "Newton, Issac", regex = "(\w+), (\w+)", format = "{1} {0}" ->
                                 required=False,
                                 )
 
-    new_tags_from_title = schema.Bool(title = u"New tags from title",
+    new_tags_from_title = schema.Bool(title = _(u"New tags from title"),
                            defaultFactory=FieldFactory('new_tags_from_title'),
                            description=_(u"We recommended strongly to leave this choice disabled: If enabled each item found by the regex will produce a (new) keyword. This may flood your Plone with so many keywords that you may not get rid of them easily. But for a particular setup this choice may be handy."),
                            default= True)
