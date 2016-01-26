@@ -64,8 +64,9 @@ will be rotated using `Pillow`. This leads to metadata loss especially xmp-data.
 Deinstallation
 ==============
 
-Go to Configuration -> Extensions. Select uninstall inqbus.tagging.
-Deinstallation purges all the configuration
+For removing all stored configurations run the profile `profile-inqbus.tagging:purge`.
+
+Then go to Configuration -> Extensions. Select uninstall inqbus.tagging.
 
 
 Using inqbus.tagging
@@ -77,7 +78,7 @@ Configure Auto-Tagging
 
 Go to Configuration -> inqbus.tagging Configuration:
 
-.. image:: docs/img/tagging_config.png
+.. image:: https://github.com/collective/inqbus.tagging/raw/master/docs/img/tagging_config.png
 
 
 
@@ -90,7 +91,7 @@ in Site Setup to select meta-fields.
 Therefore select an image and press `ok`. A list of available fields will be displayed
 including the value of the selected image as example.
 
-.. image:: docs/img/tag_import.png
+.. image:: https://github.com/collective/inqbus.tagging/raw/master/docs/img/tag_import.png
 
 Select your tags and press ok. All selected tags are added to the list in
 `Inqbus Tagging Settings` and can be configured there.
@@ -113,7 +114,7 @@ Manage existing Tags
 
 For managing existing tags you can use a modified version of `Products.PloneKeywordManager`.
 
-.. image:: docs/img/keywordmanager.png
+.. image:: https://github.com/collective/inqbus.tagging/raw/master/docs/img/keywordmanager.png
 
 Here you can join tags used for the same content or delete not wanted tags.
 
@@ -127,7 +128,7 @@ Image Preview
 To make working with Images more easier a preview-column was
 added to the `folder_contents`-View and can be selected like all other columns.
 
-.. image:: docs/img/folder_contents.png
+.. image:: https://github.com/collective/inqbus.tagging/raw/master/docs/img/folder_contents.png
 
 Retag
 -----
