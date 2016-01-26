@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.0'
+version = '1.0.1'
 
 setup(name='inqbus.tagging',
       version=version,
@@ -21,7 +21,7 @@ setup(name='inqbus.tagging',
           "Intended Audience :: Telecommunications Industry",
           "Topic :: Multimedia :: Graphics :: Presentation"
         ],
-      keywords='',
+      keywords='Plone, tagging, keywords, autorotation, EXIF, IPTC, XMP, image, inqbus',
       author='Dr. Volker Jaenisch <volker.jaenisch@inqbus.de>, Sandra Rum <sandra.rum@inqbus.de>',
       author_email='volker.jaenisch@inqbus.de',
       url='https://github.com/collective/inqbus.tagging',
