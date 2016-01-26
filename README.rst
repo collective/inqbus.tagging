@@ -51,7 +51,7 @@ Add inqbus.tagging to your buildout eggs.::
         inqbus.tagging
 
 
-To use inqbus.tagging with `jpegtran-cffi` add inqbus.tagging[jpegtran] toyour buildout eggs.::
+To use inqbus.tagging with `jpegtran-cffi` add inqbus.tagging[jpegtran] to your buildout eggs.::
 
     eggs=\
         ...
