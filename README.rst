@@ -95,6 +95,18 @@ including the value of the selected image as example.
 Select your tags and press ok. All selected tags are added to the list in
 `Inqbus Tagging Settings` and can be configured there.
 
+Enable Auto-Tagging for other Contenttypes
+------------------------------------------
+
+Register a subscriber like::
+
+    <subscriber
+    for="plone.app.contenttypes.content.Image
+         zope.lifecycleevent.IObjectCreatedEvent"
+    handler="inqbus.tagging.subscriber.title_based.title_to_tag"
+    />
+
+for every contenttype you want to tag.
 
 Manage existing Tags
 --------------------
