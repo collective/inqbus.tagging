@@ -1,29 +1,19 @@
+
 Introduction
 ============
 
-This module allows automatic tagging of multimedia content with a strong focus on images.
+This module allows automatic keyword tagging of multimedia content with a strong focus on images.
 
-Inqbus.tagging processes metadata of the categories filename, EXIF, IPTC, XMP of any object uploaded into plone.
-The metadata then is filtered by configurable filters. For each metadata category there is a filter which can be switched on/off independently.
+Inqbus.tagging processes metadata of the following keyword sources: Filename/Title, EXIF, IPTC, XMP. Any Plone Object-Type can be processed.
 
-The file name is filtered by a regular expression you are free to craft.
+Keywords from Filename
+The metadata is filtered by configurable filters. For each metadata source there is a filter which can be switched on/off independently.
 
+The filename/title may be filtered by a regular expression you are free to craft. The regular expression enables you to filter, strip, split into words, what you like.
+You can decide if you like to have new keywords to be extracted from the title or if you want use only keywords from the title that match existing ones, or both strategies with different regular expressions in parallel.
+
+Keywords from EXIF, IPTC and XMP
 EXIF, IPTC and XMP are filtered firstly by a positive list of tags for each category.
-
-For every tag in a filter can be defined a regular expression and a format string to cut and format anyway you like.
-Lets assume you have metadata tags with the structure "Asimov, Isaac; Bradley, Alex" you can transform them into the Plone tags
-"Isaac Asimov" and "Alex Bradley" easily.
-
-Since there are lots of possible tags available inqbus.tagging comes with tag import views for each
-metadata category. Each tag import views allow for opening an arbitrary file in Plone to inspect its metadata and to select and transfer
-metadata tag names into the tag configuration.
-
-Inqbus.tagging supports manual tagging of images by providing a preview image column in the `folder_contents`-View.
-Also inqbus.tagging brings lossless EXIF image auto rotation back to Plone.
-
-If you have changed your autotagging config you can use the "retag" Button in the `folder_contents`-View to rerun the
-auto tagging on certain objects.
-
 
 Stabilty
 ========
