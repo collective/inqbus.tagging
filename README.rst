@@ -19,12 +19,12 @@ Keywords from EXIF, IPTC and XMP
 
 EXIF, IPTC and XMP are filtered firstly by a positive list of tags for each category.
 
-Improved manual tagging of images
----------------------------------
-
 For every tag in a filter can be defined a regular expression and a format string to cut and format the way you like. Lets assume you have metadata tags with the structure "Asimov, Isaac; Bradley, Alex" you can transform them into the Plone tags "Isaac Asimov" and "Alex Bradley" easily.
 
 Since there are lots of possible tags available inqbus.tagging comes with tag import views for each metadata category. Each tag import view allows for opening an arbitrary file in Plone to inspect its metadata and to select and transfer metadata tag names into the tag configuration.
+
+Improved manual tagging of images
+---------------------------------
 
 Inqbus.tagging supports manual tagging of images by providing a preview image column in the folder_contents-View. Also inqbus.tagging brings lossless EXIF image auto rotation back to Plone.
 
