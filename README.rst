@@ -44,8 +44,6 @@ Requirements
 Installation
 ============
 
-.. TODO: inqbus.tagging[jpegtran] vs inqbus.tagging
-
 Add inqbus.tagging to your buildout eggs.::
 
     eggs=\
@@ -53,13 +51,21 @@ Add inqbus.tagging to your buildout eggs.::
         inqbus.tagging
 
 
+To use inqbus.tagging with `jpegtran-cffi` add inqbus.tagging[jpegtran] toyour buildout eggs.::
+
+    eggs=\
+        ...
+        inqbus.tagging[jpegtran]
+
+
+`jpegtran-cffi` is used for the rotation of the images. If you do not use it images
+will be rotated using `Pillow`. This leads to metadata loss especially xmp-data.
+
 Deinstallation
 ==============
 
 Go to Configuration -> Extensions. Select uninstall inqbus.tagging.
 Deinstallation purges all the configuration
-
-
 
 
 Using inqbus.tagging
