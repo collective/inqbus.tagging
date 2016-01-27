@@ -1,2 +1,12 @@
-recursive-include docs *.txt *.png *.GPL
 include *.rst *.cfg *.py
+recursive-include src *.jpg
+recursive-include src *.js
+recursive-include src *.po
+recursive-include src *.pot
+recursive-include src *.pt
+recursive-include src *.robot
+recursive-include src *.txt
+recursive-include src *.xml
+recursive-include src *.zcml
+recursive-include src *.png
+recursive-include src *.GPL
