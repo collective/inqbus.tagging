@@ -1,5 +1,12 @@
+
 Changelog
 =========
+
+1.0.4
+-----
+
+* Improved Documentation/Readme
+* Corrected dependencies
 
 1.0.3
 -----
