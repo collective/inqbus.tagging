@@ -47,7 +47,19 @@ Requirements
 * z3c.forms
 * IPTCInfo
 * exifread
-* (only for auto rotation) jpegtran-cffi (libjpeg8, cython, cffi)
+* jpegtran-cffi (libjpeg8, cython, cffi) for fast and loss less auto rotation.
+
+Note: If not using jpegtran the EXIF auto rotation falls back to PIL. The XMP-Metadata in auto rotated files then is lost since PIL does not respect XMP.
+    Also the rotated images are larger and a bit blurred. So we strongly suggest to use jpegtran-cffi.
+
+Installation of jpegtran-cffi
+-----------------------------
+
+Building jpegtran-cffi on debian jessie:
+
+aptitude install build-essential python-dev libturbojpeg1-dev libjpeg62-turbo-dev libffi-dev
+pip install cffi
+pip install jpegtran-cffi
 
 Installation
 ============
