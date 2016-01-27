@@ -2,6 +2,12 @@
 Changelog
 =========
 
+1.0.5
+-----
+
+* Removed entrypoints
+* Updated MANIFEST.in
+
 1.0.4
 -----
 
