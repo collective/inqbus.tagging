@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.0.3
+-----
+
+* Added MANIFEST.in to make package installable
+
 1.0.1 and 1.0.2
 ---------------
 
