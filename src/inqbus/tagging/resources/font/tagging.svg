@@ -1,0 +1,12 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2016 by original authors @ fontello.com</metadata>
+<defs>
+<font id="tagging" horiz-adv-x="1000" >
+<font-face font-family="tagging" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="tagging_icon" unicode="&#xe800;" d="M19 631l0-523 966 0 0 523-966 0z m140-47l775 0 0-429-775 0 0 429z m572-53l-164-109 63-177 203 0 63 177-165 109z m-521-28l0-12 330 0 0 12-330 0z m519-41l25-51 60-10-45-37 8-56-53 28-55-24 13 55-42 40 60 6 29 49z m-519-40l0-12 330 0 0 12-330 0z m-115-12c21 0 39-16 39-35 0-19-18-35-39-35-21 0-38 16-38 35 0 19 17 35 38 35z m115-70l0-11 330 0 0 11-330 0z m0-81l0-11 330 0 0 11-330 0z" horiz-adv-x="1000" />
+</font>
+</defs>
+</svg>

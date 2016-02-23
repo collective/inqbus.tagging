@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1000"
+   height="1000"
+   id="svg2985"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="tagging_icon.svg"
+   inkscape:export-filename="/home/volker/workspace/mailcenter5/zeocluster/src/inqbus.mailcenter3/src/inqbus/mailcenter/resources/mailcenter/icons/mailcenter.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs2987">
+    <linearGradient
+       id="linearGradient3798"
+       osb:paint="solid">
+      <stop
+         style="stop-color:#2b0000;stop-opacity:1;"
+         offset="0"
+         id="stop3800" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.4375"
+     inkscape:cx="197.40495"
+     inkscape:cy="465.42173"
+     inkscape:current-layer="layer2"
+     showgrid="true"
+     inkscape:grid-bbox="true"
+     inkscape:document-units="px"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1022"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:snap-global="true"
+     inkscape:snap-to-guides="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3841"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="24,36"
+       id="guide3885" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata2990">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     transform="translate(0,952)" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Ebene"
+     transform="translate(0,952)">
+    <path
+       style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:17.1212635;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 19.180526,-732.53818 0,522.32725 965.421464,0 0,-522.32725 -965.421464,0 z m 139.732054,46.42907 774.87782,0 0,429.4691 -774.87782,0 0,-429.4691 z m 572.38534,53.46601 -164.26453,109.18091 62.87944,176.46682 203.08791,-0.0724 62.68085,-176.53936 -164.38367,-109.03582 z m -521.57369,27.78491 0,11.60728 330.27577,0 0,-11.60728 -330.27577,0 z m 519.6683,41.13328 24.69131,50.78181 59.82279,10.19264 -45.25416,37.17955 7.85992,55.13453 -52.67742,-27.85744 -54.9401,23.86745 12.70294,-54.33654 -41.8005,-40.37156 60.49759,-5.76736 29.09763,-48.82308 z m -519.6683,40.11764 0,11.60727 330.27577,0 0,-11.60727 -330.27577,0 z M 95.39799,-512 c 21.04689,0 38.10875,15.59025 38.10875,34.82181 0,19.23154 -17.06186,34.82181 -38.10875,34.82181 -21.046879,0 -38.10873,-15.59027 -38.10873,-34.82181 0,-19.23156 17.061851,-34.82181 38.10873,-34.82181 z m 114.32624,69.64362 0,11.60728 330.27577,0 0,-11.60728 -330.27577,0 z m 0,81.25091 0,11.60728 330.27577,0 0,-11.60728 -330.27577,0 z"
+       id="rect3028"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>
