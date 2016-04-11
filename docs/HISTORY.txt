@@ -2,6 +2,13 @@
 Changelog
 =========
 
+1.0.6
+-----
+
+* Bugfix:
+    (src/lxml/lxml.etree.c:47744)
+    IndexError: list index out of range
+
 1.0.5
 -----
 
