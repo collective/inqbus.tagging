@@ -32,6 +32,9 @@ def parse(image_data):
     # parse the XMP portion of the image data
     root = ET.fromstring(xml)
 
+    if not root:
+        return {}
+
     result = {}
     # find all top level elements
     for tag in root[0].findall("./*"):
